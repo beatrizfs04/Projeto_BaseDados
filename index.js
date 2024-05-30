@@ -9,7 +9,7 @@ const port = 3000;
 const pageTitle = "Projeto Final - Base de Dados";
 
 app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname, '/index.html'));
+    res.sendFile(path.join(__dirname, '/páginas/index.html'));
 });
 
 app.listen(port, () => {
