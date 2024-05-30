@@ -1,7 +1,9 @@
+USE DIUBI;
+
 
 CREATE TABLE Pessoa
 (
-  IdPessoa INT NOT NULL AUTO_INCREMENT,
+  IdPessoa INT NOT NULL,
   PrimeiroNome VARCHAR(250),
   UltimoNome VARCHAR(250),
   Email VARCHAR(250) NOT NULL,
@@ -11,7 +13,7 @@ CREATE TABLE Pessoa
 
 CREATE TABLE Interno
 (
-  IdInterno INT NOT NULL AUTO_INCREMENT,
+  IdInterno INT NOT NULL,
   IdPessoa INT NOT NULL,
   PRIMARY KEY (IdInterno),
   FOREIGN KEY (IdPessoa) REFERENCES Pessoa(IdPessoa)
@@ -19,7 +21,7 @@ CREATE TABLE Interno
 
 CREATE TABLE Externo
 (
-  IdExterno INT NOT NULL AUTO_INCREMENT,
+  IdExterno INT NOT NULL,
   IdPessoa INT NOT NULL,
   PRIMARY KEY (IdExterno),
   FOREIGN KEY (IdPessoa) REFERENCES Pessoa(IdPessoa)
@@ -27,7 +29,7 @@ CREATE TABLE Externo
 
 CREATE TABLE ProgramaouServico
 (
-  IdProgramaouServico INT NOT NULL AUTO_INCREMENT,
+  IdProgramaouServico INT NOT NULL,
   Tipo VARCHAR(50) NOT NULL, 
   PRIMARY KEY (IdProgramaouServico)
 );
@@ -210,6 +212,15 @@ CREATE TABLE Atividade
   FOREIGN KEY (IdProjetoPrestacao) REFERENCES PrestacaoServico(IdPrestacaoServico)
 );
 
+CREATE TABLE TempoAtividade
+(
+  IdMembro INT NOT NULL,
+  TempoTrabalho DECIMAL(5, 2) NOT NULL,
+  IdAtividade INT NOT NULL,
+  PRIMARY KEY (IdMembro, IdAtividade),
+  FOREIGN KEY (IdAtividade) REFERENCES Atividade(IdAtividade)
+);
+
 CREATE TABLE PosicaoInterno
 (
   IdPosicao INT NOT NULL,
@@ -219,15 +230,6 @@ CREATE TABLE PosicaoInterno
   FOREIGN KEY (IdPosicao) REFERENCES Posicao(IdPosicao),
   FOREIGN KEY (IdInterno) REFERENCES Interno(IdInterno),
   FOREIGN KEY (IdProjeto) REFERENCES Projeto(IdProjeto)
-);
-
-CREATE TABLE TempoAtividade
-(
-  IdMembro INT NOT NULL,
-  TempoTrabalho DECIMAL(5, 2) NOT NULL,
-  IdAtividade INT NOT NULL,
-  PRIMARY KEY (IdMembro, IdAtividade),
-  FOREIGN KEY (IdAtividade) REFERENCES Atividade(IdAtividade)
 );
 
 CREATE TABLE Publicacao
