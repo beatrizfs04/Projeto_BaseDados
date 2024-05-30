@@ -14,6 +14,7 @@
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="ver_dados.html">Ver Dados</a></li>
+                <li><a href="criar_dados.html" class="selected">Criar Dados</a></li>
                 <li><a href="mudar_dados.html">Mudar Dados</a></li>
                 <li><a href="eliminar_dados.html">Eliminar Dados</a></li>
                 <li><a href="ver_creditos.html">Ver Créditos</a></li>
@@ -23,15 +24,19 @@
             <section>
                 <h2>Criar Dados</h2>
                 <hr><br>
-                <form>
-                    <label for="nomeProjeto">Nome do Projeto:</label>
-                    <input type="text" id="nomeProjeto" name="nomeProjeto"><br><br>
-                    <label for="descricao">Descrição:</label>
-                    <textarea id="descricao" name="descricao"></textarea><br><br>
-                    <button type="submit">Criar</button>
-                </form>
+                <div class="escolha">
+                    <button id="projeto" type="button">Projeto</button>
+                    <button id="serviço" type="button">Prestação de Serviço</button>
+                </div>
+                <div class="escolhaProjeto">
+                    Escolha Projeto
+                </div>
+                <div class="escolhaServiço">
+                    Escolha Serviço
+                </div>
             </section>
         </main>
+        <script src="mudar_divs.js"></script>
     </body>
     <script src="index.js"></script>
 </html>

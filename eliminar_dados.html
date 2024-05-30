@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>DIUBI | Credits</title>
+        <title>DIUBI | Delete</title>
         <link rel="stylesheet" href="styles.css">
         <link rel="icon" href="./favicon.ico" type="image/x-icon">
     </head>
@@ -16,6 +16,7 @@
                 <li><a href="ver_dados.html">Ver Dados</a></li>
                 <li><a href="criar_dados.html">Criar Dados</a></li>
                 <li><a href="mudar_dados.html">Mudar Dados</a></li>
+                <li><a href="eliminar_dados.html" class="selected">Eliminar Dados</a></li>
                 <li><a href="ver_creditos.html">Ver Créditos</a></li>
             </ul>
         </nav>
@@ -23,8 +24,19 @@
             <section>
                 <h2>Eliminar Dados</h2>
                 <hr><br>
+                <div class="escolha">
+                    <button id="projeto" type="button">Projeto</button>
+                    <button id="serviço" type="button">Prestação de Serviço</button>
+                </div>
+                <div class="escolhaProjeto">
+                    Escolha Projeto
+                </div>
+                <div class="escolhaServiço">
+                    Escolha Serviço
+                </div>
             </section>
         </main>
+        <script src="mudar_divs.js"></script>
     </body>
     <script src="index.js"></script>
 </html>
