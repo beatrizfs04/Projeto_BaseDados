@@ -64,7 +64,8 @@ GO
 CREATE View Institution AS 
 SELECT 
     IdInstituicao as InstitutionID, 
-    NomeInstituicao as InstitutionName 
+    NomeInstituicao as InstitutionName, 
+    NacionalidadeInstituicao as InstitutionNationality 
 FROM
     Instituicao;
 GO
@@ -236,3 +237,7 @@ SELECT
 FROM
     Publicacao;
 GO
+
+
+
+

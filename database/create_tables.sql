@@ -60,6 +60,7 @@ CREATE TABLE Instituicao
 (
   IdInstituicao INT NOT NULL,
   NomeInstituicao VARCHAR(250) NOT NULL,
+  NacionalidadeInstituicao: VARCHAR(250) NOT NULL,
   PRIMARY KEY (IdInstituicao)
 );
 
