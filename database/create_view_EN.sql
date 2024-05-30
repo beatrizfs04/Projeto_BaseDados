@@ -9,10 +9,10 @@ SELECT
     Email, 
     Telefone as Phone
 FROM
-    Interno;
+    Pessoa;
 GO
 
-CREATE View Internal AS 
+CREATE View InternalMember AS 
 SELECT 
     IdInterno as InternalId, 
     IdPessoa as PersonId
@@ -20,7 +20,7 @@ FROM
     Interno;
 GO
 
-CREATE View External AS 
+CREATE View ExternalMember AS 
 SELECT 
     IdExterno as ExternalId, 
     IdPessoa as PersonId
@@ -31,9 +31,9 @@ GO
 CREATE View ProgramorService AS 
 SELECT 
     IdProgramaouServico as ProgramOrServiceID, 
-    TipoProgramaouServico as TypeProgramOrService, 
+    Tipo as TypeProgramOrService
 FROM
-    Externo;
+    ProgramaouServico;
 GO
 
 CREATE View DateInfo AS 
@@ -110,7 +110,7 @@ FROM
     Membro;
 GO
 
-CREATE View Orcid AS 
+CREATE View OrcidInfo AS 
 SELECT 
     IdOrcid as OrcidID, 
     IdMembro as MemberID
