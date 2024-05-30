@@ -1,8 +1,8 @@
 const express = require('express');
 const queries = express.Router();
-const mysql = require('mysql');
-const { sql, poolPromise } = require('./pool');
-/* const db = mysql.createConnection({ host: 'localhost', user: 'root', password: '', database: 'projetobd'}); db.connect(); */
+/* const mysql = require('mysql');
+const db = mysql.createConnection({ host: 'localhost', user: 'root', password: '', database: 'projetobd'}); db.connect(); */
+const { sql, poolPromise } = require('../pool');
 
 /* 
 queries.update = async function() {
@@ -33,3 +33,5 @@ queries.delete = async function() {
     })
 } 
 */
+
+module.exports = queries;

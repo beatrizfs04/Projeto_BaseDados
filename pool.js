@@ -1,17 +1,13 @@
 const sql = require('mssql');
 
 const config = {
-    user: 'sa',
-    password: 'PASSWORD',
-    server: 'localhost',
-    database: 'DATABASE',
-    options: {
-      encrypt: false, // A maioria das conexões de Named Pipes locais não usa criptografia
-      enableArithAbort: true,
-      trustedConnection: true,
-      instanceName: 'SQLEXPRESS', // Substitua pelo nome da sua instância se for diferente
-      pipe: '\\\\.\\pipe\\MSSQL$SQLEXPRESS\\sql\\query' // Substitua pelo seu pipe real
-    }
+  "user": "sa", // Database username
+  "password": "paiva001", // Database password
+  "server": "127.0.0.1", // Server IP address
+  "database": "DIUBI", // Database name
+  "options": {
+      "encrypt": false // Disable encryption
+  }
 };
 
 const poolPromise = new sql.ConnectionPool(config)
