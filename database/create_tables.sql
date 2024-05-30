@@ -93,7 +93,7 @@ CREATE TABLE Posicao
 
 CREATE TABLE Membro
 (
-  IdMembro INT NOT NULL AUTO_INCREMENT,
+  IdMembro INT NOT NULL,
   IdPessoa INT NOT NULL,
   TipoMembro VARCHAR(250) NOT NULL,
   PRIMARY KEY (IdMembro),

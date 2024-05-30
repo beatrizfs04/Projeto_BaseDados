@@ -236,7 +236,3 @@ SELECT
 FROM
     Publicacao;
 GO
-
-
-
-
