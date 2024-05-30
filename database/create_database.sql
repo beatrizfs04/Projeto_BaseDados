@@ -1,9 +1,9 @@
--- Create SQL as MySQL Server
+-- Create Database as MySQL Server
 DROP DATABASE IF EXISTS `DIUBI`;
 CREATE DATABASE IF NOT EXISTS `DIUBI` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 
--- Create SQL as Microsoft SQL Server
+-- Create Database as Microsoft SQL Server
 IF EXISTS (SELECT * FROM sys.databases WHERE name = 'DIUBI')
 BEGIN
     DROP DATABASE DIUBI;
