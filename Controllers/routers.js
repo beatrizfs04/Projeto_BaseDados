@@ -1,3 +1,9 @@
+const express = require('express');
+const queries = express.Router();
+const mysql = require('mysql');
+const { sql, poolPromise } = require('./pool');
+/* const db = mysql.createConnection({ host: 'localhost', user: 'root', password: '', database: 'projetobd'}); db.connect(); */
+
 /* 
 queries.update = async function() {
     db.query('UPDATE tabela SET objeto = ? WHERE campo = ?', (error, results) => {
