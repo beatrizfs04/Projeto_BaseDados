@@ -1,8 +1,9 @@
 USE DIUBI;
 GO 
 
-CREATE View Internal AS 
+CREATE View Person AS 
 SELECT 
+    IdPessoa as PersonId,
     PrimeiroNome as FirstName, 
     UltimoNome as LastName, 
     Email, 
@@ -11,12 +12,26 @@ FROM
     Interno;
 GO
 
+CREATE View Internal AS 
+SELECT 
+    IdInterno as InternalId, 
+    IdPessoa as PersonId
+FROM
+    Interno;
+GO
+
 CREATE View External AS 
 SELECT 
-    PrimeiroNome as FirstName, 
-    UltimoNome as LastName, 
-    Email, 
-    Telefone as Phone
+    IdExterno as ExternalId, 
+    IdPessoa as PersonId
+FROM
+    Externo;
+GO
+
+CREATE View ProgramorService AS 
+SELECT 
+    IdProgramaouServico as ProgramOrServiceID, 
+    TipoProgramaouServico as TypeProgramOrService, 
 FROM
     Externo;
 GO
@@ -29,7 +44,6 @@ SELECT
 FROM
     DataInfo;
 GO
-
 
 CREATE View State AS 
 SELECT 
@@ -90,6 +104,7 @@ GO
 CREATE View Member AS 
 SELECT 
     IdMembro as MemberID, 
+    IdPessoa as PersonId,
     TipoMembro as MemberType 
 FROM
     Membro;
@@ -175,7 +190,7 @@ SELECT
     IdPrestacaoServico as ServiceProvisionID, 
     NomePrestacaoServico as ServiceProvisionName, 
     Descricao as Description, 
-    IdInterno as InternalMemberID, 
+    IdInterno as InternalId, 
     IdData as DateID, 
     IdEstado as StateID, 
     IdFinanciamento as FundingID
@@ -196,7 +211,7 @@ GO
 CREATE View InternalMemberPosition AS 
 SELECT 
     IdPosicao as PositionID, 
-    IdInterno as InternalMemberID, 
+    IdInterno as InternalId, 
     IdProjeto as ProjectID
 FROM
     PosicaoInterno;
@@ -216,7 +231,7 @@ SELECT
     IdPublicacao as PublicationID, 
     DOI as DOI, 
     IdProjeto as ProjectID, 
-    IdInterno as InternalMemberID, 
+    IdInterno as InternalID, 
     IdData as DateID
 FROM
     Publicacao;
