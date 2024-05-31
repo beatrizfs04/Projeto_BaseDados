@@ -30,9 +30,129 @@
                 </div>
                 <div class="escolhaProjeto">
                     Escolha Projeto
+                    <dl>
+                        <dt style="font-size: 30px; text-decoration: underline;">Projeto</dt>
+                        <br>
+                        <dt><b>Identificador do Projeto(IdProjeto):</b></dt>
+                        <dd>Não sei se o IdProjeto gerimos automático na BD ou por aqui</dd>
+                        <dt><b>Nome do Projeto(NomeProjeto):</b></dt>
+                        <dt><b>Descrição(Descricao):</b></dt>
+                        <dt><b>Estado atual(IdEstado):</b></dt>
+                        <dd> O estado deve ser uma CheckBox com os valores:</dd>
+                        <dd>    aprovado, cancelado, concluído, em curso, encerrado, renovado, em submissão</dd>
+                        <dd>    Dúvida: mantemos o renovado (sabendo que vai envolver uma comlpexidade com datas) e o "em 
+                                submissão"? sendo que a "submissão" é este formulário? 
+                                O aprovado também é necessário já que se o projeto é aprovado passa para "em curso"?</dd>
+                        <dt><b>DataInicio(IdData):</b></dt>
+                        <dt><b>DataFim(IdData):</b></dt>
+                        <dd> Estes dados sobre as datas devem ser inseridos na tabela de datas e o IdData é gerado com 
+                            essas datas e inseridos na BD</dd>
+                        <dd> Podemos permitir a <b>DataFim</b> ficar vazia para subenteder que o projeto ainda está a 
+                            decorrer? Ou fazemos algo como excluir esse campo ou assumir que ele é 
+                            nulo quando o <b>Estado</b> do projeto é assumido como "em curso"?</dd>
+                        <dt><b>Área Científica(IdArea):</b></dt>
+                        <dt><b>Domínio Científico(IdDominio):</b></dt>
+                        <dd>Fazemos essa seção também como CheckBox? Lembrando que esses dados irão para outras</dd>
+                        <dt><b>Investigador Responsável(IdMembro):</b></dt>
+                        <dt><b>Palavras Chaves Associadas:(Tabela AssociarPalavraChave):</b></dt>
+                        <br>
+                        <dt style="font-size: 30px; text-decoration: underline;">Equipa</dt>
+                        <br>
+                        <dt><b>Identificador da Equipa(IdEquipa):</b></dt>
+                        <dd>De novo, não sei se é automático!E vamos precisar deixar que seja possível inserir quantas
+                        equipas quiser já que um projeto pode ter várias equipas.</dd>
+                        <dt>Membros Associados(IdMembro):</dt>
+                        <dd>Vamos precisar de uma seção aqui que deixe adicionar quantos membros 
+                            quiser (podemos estabelecer um número mínimo e máximo também)
+                            e depois são inseridos na tabela no formato adequado (Ver Tabela Equipa)</dd>
+                        <br>
+                        <dt style="font-size: 30px; text-decoration: underline;">Financiamento</dt>
+                        <br>
+                        <dt><b>Identificador do Financiamento(IdFinanciamento):</b></dt>
+                        <dd>De novo, não sei se é automático!E vamos precisar deixar que sejam inseridos vários
+                            financiamentos já que fizemos como uma relação muitos para muitos e os passos a seguir
+                            devem ser preenchidos quantos financiamentos forem feitos</dd>
+                        <dt>Financiador(IdFinanciador):</dt>
+                        <dd>Este deve ser apenas um por IdFinanciamento</dd>
+                        <dt><b>Tipo Financiamento:(TipoFinanciamento)</b></dt>
+                        <dd>Esse precisa ser uma CheckBox com "Competitivo" ou "Não Competitivo"</dd>
+                        <dt><b>Origem Financiamento(OrigemFinanciamento)</b></dt>
+                        <dd>Esse precisa ser uma CheckBox com "Interno" ou "Externo"</dd>
+                        <dd>Criar um Trigger para garantir que a instituição financiadora é a UBI quando o Interno for selecionado!</dd>
+                        <dt><b>Valor(Valor):</b></dt>
+                        <dt><b>Identificação Custo Elegível(IdCustoElegivel):</b></dt>
+                        <dt><b>Valor Atribuído a Equipa(CustoEquipa):</b></dt>
+                        <dt><b>Valor Atribuído ao Projeto(CustoProjeto):</b></dt>
+                        <dd>Precisamos ver como fazer esta parte. Fazemos o utilizador escolher uma percentagem? Ou o valor total?
+                        Automaticamente a atribuir a um precisa ser associado o valor ao outro de acordo com o "Valor"</dd>
+                        <br>
+                        <dt style="font-size: 30px; text-decoration: underline; color:aquamarine">Nova Seção</dt>
+                        <dt>Precisamos de uma nova seção para registro de:</dt>
+                        <dd>Membros</dd>
+                        <dd>Instituições</dd>
+                        <dd>Publicações</dd>
+                        <dd>Palavras Chaves</dd>
+                        <dd>Registo de Atividades</dd>
+                        <dd>Domínio Científico</dd>
+                        <dd>Área Científica</dd>
+                    </dl>
                 </div>
                 <div class="escolhaServiço">
                     Escolha Serviço
+                    <dl>
+                        <dt style="font-size: 30px; text-decoration: underline;">Prestação de Serviço</dt>
+                        <br>
+                        <dt><b>Identificador da Prestação de Serviço(IdPrestacaoServico):</b></dt>
+                        <dd>Não sei se o IdPrestacaoServico gerimos automático na BD ou por aqui</dd>
+                        <dt><b>Nome da Prestação de Serviço(NomeProjeto):</b></dt>
+                        <dt><b>Descrição(Descricao):</b></dt>
+                        <dt><b>Estado atual(IdEstado):</b></dt>
+                        <dd> O estado deve ser uma CheckBox com os valores:</dd>
+                        <dd>    aprovado, cancelado, concluído, em curso, encerrado, renovado, em submissão</dd>
+                        <dd>    Dúvida: mantemos o renovado (sabendo que vai envolver uma comlpexidade com datas) e o "em 
+                                submissão"? sendo que a "submissão" é este formulário? 
+                                O aprovado também é necessário já que se a prestação é aprovada passa para "em curso"?</dd>
+                        <dt><b>Identificador do Interno Responsável(IdInterno):</b></dt>
+                        <dd>Este é apenas 1 Interno Responsável pela prestação de serviço</dd>
+                        <dt><b>DataInicio(IdData):</b></dt>
+                        <dt><b>DataFim(IdData):</b></dt>
+                        <dd> Estes dados sobre as datas devem ser inseridos na tabela de datas e o IdData é gerado com 
+                            essas datas e inseridos na BD</dd>
+                        <dd> Podemos permitir a <b>DataFim</b> ficar vazia para subenteder que a prestação de serviço ainda está a 
+                            decorrer? Ou fazemos algo como excluir esse campo ou assumir que ele é 
+                            nulo quando o <b>Estado</b> do serviço é assumido como "em curso"?</dd>
+                        <dt><b>Área Científica(IdArea):</b></dt>
+                        <dt><b>Domínio Científico(IdDominio):</b></dt>
+                        <dd>Fazemos essa seção também como CheckBox? Lembrando que esses dados irão para outras</dd>
+                        <dt><b>Investigador Responsável(IdMembro):</b></dt>
+                        <dt><b>Palavras Chaves Associadas:(Tabela AssociarPalavraChave):</b></dt>
+                        <br>
+                        
+                        <br>
+                        <dt style="font-size: 30px; text-decoration: underline;">Financiamento</dt>
+                        <br>
+                        <dt><b>Identificador do Financiamento(IdFinanciamento):</b></dt>
+                        <dd>De novo, não sei se é automático!E vamos precisar deixar que sejam inseridos vários
+                            financiamentos já que fizemos como uma relação muitos para muitos e os passos a seguir
+                            devem ser preenchidos quantos financiamentos forem feitos</dd>
+                        <dt>Financiador(IdFinanciador):</dt>
+                        <dd>Este deve ser apenas um por IdFinanciamento</dd>
+                        <dt><b>Tipo Financiamento:(TipoFinanciamento)</b></dt>
+                        <dd>Esse precisa ser uma CheckBox com "Competitivo" ou "Não Competitivo"</dd>
+                        <dt><b>Origem Financiamento(OrigemFinanciamento)</b></dt>
+                        <dd>Esse precisa ser uma CheckBox com "Interno" ou "Externo"</dd>
+                        <dd>Criar um Trigger para garantir que a instituição financiadora é a UBI quando o Interno for selecionado!</dd>
+                        <dt><b>Valor(Valor):</b></dt>
+                        <br>
+                        <dt style="font-size: 30px; text-decoration: underline; color:aquamarine">Nova Seção</dt>
+                        <dt>Precisamos de uma nova seção para registro de:</dt>
+                        <dd>Membros</dd>
+                        <dd>Instituições</dd>
+                        <dd>Publicações</dd>
+                        <dd>Palavras Chaves</dd>
+                        <dd>Registo de Atividades</dd>
+                        <dd>Domínio Científico</dd>
+                        <dd>Área Científica</dd>
                 </div>
             </section>
         </main>

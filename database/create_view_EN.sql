@@ -28,12 +28,12 @@ FROM
     Externo;
 GO
 
-CREATE View ProgramorService AS 
+CREATE View ProjectorService AS 
 SELECT 
-    IdProgramaouServico as ProgramOrServiceID, 
-    Tipo as TypeProgramOrService
+    IdProjeto_Servico as ProjectOrServiceID, 
+    TipoProjeto_Servico  as ProjectOrServiceType
 FROM
-    ProgramaouServico;
+    Projeto_Servico;
 GO
 
 CREATE View DateInfo AS 
@@ -102,6 +102,15 @@ FROM
     Posicao;
 GO
 
+CREATE View Financier AS 
+SELECT 
+    IdFinanciador as FinancierId, 
+    TipoFinanciador as FinancierType 
+FROM
+    Financiador;
+GO
+
+
 CREATE View Member AS 
 SELECT 
     IdMembro as MemberID, 
@@ -134,7 +143,7 @@ SELECT
     TipoFinanciamento as FundingType, 
     OrigemFinanciamento as FundingSource, 
     TipoFinanciador as FunderType, 
-    IdProgramaouServico as ProgramOrServiceID
+    IdProjeto_Servico as ProjectOrServiceID
 FROM
     Financiamento;
 GO
@@ -161,8 +170,7 @@ SELECT
     IdEstado as StateID, 
     IdArea as AreaID, 
     IdDominio as DomainID, 
-    IdMembro as MemberID, 
-    IdCustoElegivel as EligibleCostID
+    IdMembro as MemberID 
 FROM
     Projeto;
 GO
@@ -180,8 +188,7 @@ CREATE View Team AS
 SELECT 
     IdEquipa as TeamID, 
     IdMembro as MemberID, 
-    IdProjeto as ProjectID, 
-    IdCustoElegivel as EligibleCostID 
+    IdProjeto as ProjectID 
 FROM
     Equipa;
 GO
@@ -204,7 +211,7 @@ SELECT
     IdAtividade as ActivityID, 
     NomeAtividade as ActivityName, 
     TipoAtividade as ActivityType, 
-    IdProjetoPrestacao as ProjectServiceID
+    IdProjeto_Servico AS ProjectServiceID
 FROM
     Atividade;
 GO
