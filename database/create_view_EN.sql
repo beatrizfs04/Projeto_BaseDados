@@ -211,7 +211,8 @@ SELECT
     IdAtividade as ActivityID, 
     NomeAtividade as ActivityName, 
     TipoAtividade as ActivityType, 
-    IdProjeto_Servico AS ProjectServiceID
+    IdProjeto_Servico AS ProjectServiceID,
+    TipoProjeto_Servico AS ProjectServiceType
 FROM
     Atividade;
 GO

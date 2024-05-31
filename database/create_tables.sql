@@ -217,8 +217,9 @@ CREATE TABLE Atividade
   NomeAtividade VARCHAR(250) NOT NULL,
   TipoAtividade VARCHAR(250) NOT NULL,
   IdProjeto_Servico  INT NOT NULL,
+  TipoProjeto_Servico VARCHAR(50) NOT NULL, 
   PRIMARY KEY (IdAtividade),
-  FOREIGN KEY (IdProjeto_Servico) REFERENCES Projeto_Servico(IdProjeto_Servico)
+  FOREIGN KEY (IdProjeto_Servico, TipoProjeto_Servico) REFERENCES Projeto_Servico(IdProjeto_Servico, TipoProjeto_Servico)
 );
 
 CREATE TABLE TempoAtividade
