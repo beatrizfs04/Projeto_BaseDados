@@ -20,22 +20,19 @@ h1{
 nav {
     color: black;
     background-color: white;
-    border-radius: 20px;
+    border-radius: 20px; 
     padding: 10px;
-    overflow: hidden; 
 }
 
 nav ul {
     list-style: none;
     padding: 0;
     display: flex;
-    flex-wrap: wrap; 
     justify-content: center;
 }
 
 nav ul li {
-    margin: 5px 1em; 
-    flex: 1 1 auto;
+    margin: 0 1em;
 }
 
 nav ul li a {
@@ -92,6 +89,21 @@ form button:hover {
     border-radius: 20px;
 }
 
+.creditos {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.creditos li {
+    margin-bottom: 5px;
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+}
+
+.creditos li:first-child {
+    font-weight: bold;
+}
 .escolha{
     margin: auto;
     width: 100%;
@@ -115,42 +127,4 @@ form button:hover {
 
 .escolhaProjeto {
     display: none;
-}
-
-.title {
-    font-size: 25px;
-    color: black;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.content {
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-    color: black;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.features-list {
-    font-size: 20px;
-    line-height: 1.6;
-    list-style-type: none;
-    padding: 0;
-}
-
-.features-list li {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border: 1px solid #bfbfbf;
-    border-radius: 20px;
-    background-color: #f7f7f7;
-    transition: background-color 0.3s;
-}
-
-.features-list li:hover {
-    background-color: #0a00364b;
 }
