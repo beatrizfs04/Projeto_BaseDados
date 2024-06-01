@@ -19,23 +19,25 @@ on [table_name]
 --sendo também considerada para os membros da equipa de investigação a percentagem mínima de tempo de dedicação de 15%.
 
 ----trigger inserir Tabela Pessoa, Membro, Interno, Externo---------------------
-CREATE PROCEDURE InsertPessoa
-    @PrimeiroNome NVARCHAR(100),
-    @UltimoNome NVARCHAR(100),
-    @Email NVARCHAR(100),
-    @Telefone NVARCHAR(20),
-    @TipoMembro NVARCHAR(50)
+CREATE PROCEDURE InserirPessoa
+(
+    @PrimeiroNome VARCHAR(250),
+    @UltimoNome VARCHAR(250),
+    @Email VARCHAR(250),
+    @Telefone VARCHAR(20),
+    @TipoMembro VARCHAR(250)
+)
 AS
 BEGIN
     DECLARE @newIdPessoa INT;
-    
+
     -- Insere a pessoa
     INSERT INTO Pessoa (PrimeiroNome, UltimoNome, Email, Telefone)
     VALUES (@PrimeiroNome, @UltimoNome, @Email, @Telefone);
-    
+
     -- Obtém o ID da pessoa recém-inserida
     SET @newIdPessoa = SCOPE_IDENTITY();
-    
+
     -- Insere no Interno ou Externo baseado no tipo de membro
     IF @TipoMembro = 'Interno'
     BEGIN
