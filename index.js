@@ -38,6 +38,8 @@ app.get('/mudar_divs', function(req, res) {
     res.sendFile(path.join(__dirname, '/web/mudar_divs.js'));
 });
 
+app.use('/api/', queries);
+
 app.listen(port, () => {
     console.log(`> ${pageTitle} - http://localhost:${port}`);
 });

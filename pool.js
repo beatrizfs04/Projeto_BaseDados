@@ -1,4 +1,9 @@
+const express = require('express');
 const sql = require('mssql');
+const bodyParser = require('body-parser');
+
+const app = express();
+app.use(bodyParser.json());
 
 const config = {
   "user": "sa", // Database username
@@ -10,11 +15,12 @@ const config = {
   }
 };
 
-const poolPromise = new sql.ConnectionPool(config)
-  .connect()
-  .then(pool => {
+let pool;
+
+sql.connect(config)
+  .then(p => {
+    pool = p;
     console.log('» Conectado ao Microsoft SQL Server');
-    return pool;
   })
   .catch(err => {
     console.log('» Falha ao Conectar ao Microsoft SQL Server', err);
@@ -22,5 +28,5 @@ const poolPromise = new sql.ConnectionPool(config)
   });
 
 module.exports = {
-  sql, poolPromise
+  sql, pool
 };
