@@ -1,9 +1,9 @@
 USE DIUBI;
-
+--------------procedure pessoa-----------------
 
 CREATE TABLE Pessoa
 (
-  IdPessoa INT NOT NULL,
+  IdPessoa INT IDENTITY(1,1) NOT NULL,
   PrimeiroNome VARCHAR(250),
   UltimoNome VARCHAR(250),
   Email VARCHAR(250) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE Pessoa
 
 CREATE TABLE Interno
 (
-  IdInterno INT NOT NULL,
+  IdInterno INT IDENTITY(1,1) NOT NULL,
   IdPessoa INT NOT NULL,
   PRIMARY KEY (IdInterno),
   FOREIGN KEY (IdPessoa) REFERENCES Pessoa(IdPessoa)
@@ -21,12 +21,23 @@ CREATE TABLE Interno
 
 CREATE TABLE Externo
 (
-  IdExterno INT NOT NULL,
+  IdExterno INT IDENTITY(1,1) NOT NULL,
   IdPessoa INT NOT NULL,
   PRIMARY KEY (IdExterno),
   FOREIGN KEY (IdPessoa) REFERENCES Pessoa(IdPessoa)
 );
 
+CREATE TABLE Membro
+(
+  IdMembro INT NOT NULL,
+  IdPessoa INT NOT NULL,
+  TipoMembro VARCHAR(250) NOT NULL,
+  PRIMARY KEY (IdMembro),
+  FOREIGN KEY (IdPessoa) REFERENCES Pessoa(IdPessoa)
+);
+
+---------------------------------------------------------------
+---------problema1--------------
 CREATE TABLE Projeto_Servico
 (
   IdProjeto_Servico INT NOT NULL,
@@ -100,15 +111,6 @@ CREATE TABLE Financiador
   PRIMARY KEY (IdFinanciador, TipoFinanciador)
 );
 
-CREATE TABLE Membro
-(
-  IdMembro INT NOT NULL,
-  IdPessoa INT NOT NULL,
-  TipoMembro VARCHAR(250) NOT NULL,
-  PRIMARY KEY (IdMembro),
-  FOREIGN KEY (IdPessoa) REFERENCES Pessoa(IdPessoa)
-);
-
 CREATE TABLE Orcid
 (
   IdOrcid INT NOT NULL,
@@ -116,7 +118,8 @@ CREATE TABLE Orcid
   PRIMARY KEY (IdOrcid),
   FOREIGN KEY (IdMembro) REFERENCES Membro(IdMembro)
 );
-
+---------------membros internos devem ser orbigatóriamente da UBI---------
+-----e membros externos não podem ser!!
 CREATE TABLE Instituicao_Membro
 (
   IdMembro INT NOT NULL,
@@ -125,7 +128,7 @@ CREATE TABLE Instituicao_Membro
   FOREIGN KEY (IdMembro) REFERENCES Membro(IdMembro),
   FOREIGN KEY (IdInstituicao) REFERENCES Instituicao(IdInstituicao)
 );
-
+---------problema2
 CREATE TABLE Financiamento
 (
   IdFinanciamento INT NOT NULL,
@@ -140,7 +143,7 @@ CREATE TABLE Financiamento
   FOREIGN KEY (IdProjeto_Servico, TipoProjeto_Servico) REFERENCES Projeto_Servico(IdProjeto_Servico, TipoProjeto_Servico),
   FOREIGN KEY (IdFinanciador, TipoFinanciador) REFERENCES Financiador(IdFinanciador, TipoFinanciador)
 );
-
+----------problema3---alterar IdMembro para Id Interno
 CREATE TABLE Projeto
 (
   IdProjeto INT NOT NULL,
@@ -160,7 +163,7 @@ CREATE TABLE Projeto
   FOREIGN KEY (IdDominio) REFERENCES DominioCientifico(IdDominio),
   FOREIGN KEY (IdMembro) REFERENCES Membro(IdMembro)
 );
-
+------------problema4
 CREATE TABLE Equipa
 (
   IdEquipa INT NOT NULL,
@@ -170,7 +173,7 @@ CREATE TABLE Equipa
   FOREIGN KEY (IdMembro) REFERENCES Membro(IdMembro),
   FOREIGN KEY (IdProjeto) REFERENCES Projeto(IdProjeto)
 );
-
+--------------problema5
 CREATE TABLE CustoElegivel
 (
   IdCustoElegivel INT NOT NULL,
@@ -210,7 +213,7 @@ CREATE TABLE PrestacaoServico
   FOREIGN KEY (IdEstado) REFERENCES Estado(IdEstado),
   FOREIGN KEY (IdFinanciamento) REFERENCES Financiamento(IdFinanciamento)
 );
-
+------------------atividade
 CREATE TABLE Atividade
 (
   IdAtividade INT NOT NULL,
@@ -225,7 +228,7 @@ CREATE TABLE Atividade
 CREATE TABLE TempoAtividade
 (
   IdMembro INT NOT NULL,
-  TempoTrabalho DECIMAL(5, 2) NOT NULL,
+  TempoTrabalho TIME NOT NULL,
   IdAtividade INT NOT NULL,
   PRIMARY KEY (IdMembro, IdAtividade),
   FOREIGN KEY (IdAtividade) REFERENCES Atividade(IdAtividade)
