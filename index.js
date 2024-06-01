@@ -34,6 +34,10 @@ app.get('/styles', function(req, res) {
     res.sendFile(path.join(__dirname, '/web/styles.css'));
 });
 
+app.get('/mudar_divs', function(req, res) {
+    res.sendFile(path.join(__dirname, '/web/mudar_divs.js'));
+});
+
 app.listen(port, () => {
     console.log(`> ${pageTitle} - http://localhost:${port}`);
 });
