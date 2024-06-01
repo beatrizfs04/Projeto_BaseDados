@@ -10,6 +10,30 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, '/web/index.html'));
 });
 
+app.get('/ver_dados', function(req, res) {
+    res.sendFile(path.join(__dirname, '/web/ver_dados.html'));
+});
+
+app.get('/eliminar_dados', function(req, res) {
+    res.sendFile(path.join(__dirname, '/web/eliminar_dados.html'));
+});
+
+app.get('/mudar_dados', function(req, res) {
+    res.sendFile(path.join(__dirname, '/web/mudar_dados.html'));
+});
+
+app.get('/criar_dados', function(req, res) {
+    res.sendFile(path.join(__dirname, '/web/criar_dados.html'));
+});
+
+app.get('/ver_creditos', function(req, res) {
+    res.sendFile(path.join(__dirname, '/web/ver_creditos.html'));
+});
+
+app.get('/styles', function(req, res) {
+    res.sendFile(path.join(__dirname, '/web/styles.css'));
+});
+
 app.listen(port, () => {
     console.log(`> ${pageTitle} - http://localhost:${port}`);
 });
