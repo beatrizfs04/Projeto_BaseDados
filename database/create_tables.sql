@@ -128,22 +128,10 @@ CREATE TABLE Instituicao_Membro
   FOREIGN KEY (IdMembro) REFERENCES Membro(IdMembro),
   FOREIGN KEY (IdInstituicao) REFERENCES Instituicao(IdInstituicao)
 );
----------problema2
-CREATE TABLE Financiamento
-(
-  IdFinanciamento INT NOT NULL,
-  Valor DECIMAL(15, 2) NOT NULL,
-  TipoFinanciamento VARCHAR(250) NOT NULL,
-  OrigemFinanciamento VARCHAR(250) NOT NULL,
-  IdFinanciador INT NOT NULL,
-  TipoFinanciador VARCHAR(50) NOT NULL, 
-  IdProjeto_Servico INT NOT NULL,
-  TipoProjeto_Servico VARCHAR(50) NOT NULL, 
-  PRIMARY KEY (IdFinanciamento),
-  FOREIGN KEY (IdProjeto_Servico, TipoProjeto_Servico) REFERENCES Projeto_Servico(IdProjeto_Servico, TipoProjeto_Servico),
-  FOREIGN KEY (IdFinanciador, TipoFinanciador) REFERENCES Financiador(IdFinanciador, TipoFinanciador)
-);
+
+
 ----------problema3---alterar IdMembro para Id Interno
+
 CREATE TABLE Projeto
 (
   IdProjeto INT NOT NULL,
@@ -163,6 +151,24 @@ CREATE TABLE Projeto
   FOREIGN KEY (IdDominio) REFERENCES DominioCientifico(IdDominio),
   FOREIGN KEY (IdMembro) REFERENCES Membro(IdMembro)
 );
+
+---------problema2
+CREATE TABLE Financiamento
+(
+  IdFinanciamento INT NOT NULL,
+  Valor DECIMAL(15, 2) NOT NULL,
+  TipoFinanciamento VARCHAR(250) NOT NULL,
+  OrigemFinanciamento VARCHAR(250) NOT NULL,
+  IdFinanciador INT NOT NULL,
+  TipoFinanciador VARCHAR(50) NOT NULL, 
+  IdProjeto_Servico INT NOT NULL,
+  VARCHAR(50) NOT NULL, 
+  PRIMARY KEY (IdFinanciamento),
+  FOREIGN KEY (IdProjeto_Servico, TipoProjeto_Servico) REFERENCES Projeto_Servico(IdProjeto_Servico, TipoProjeto_Servico),
+  FOREIGN KEY (IdFinanciador, TipoFinanciador) REFERENCES Financiador(IdFinanciador, TipoFinanciador)
+);
+
+
 ------------problema4
 CREATE TABLE Equipa
 (
@@ -173,18 +179,27 @@ CREATE TABLE Equipa
   FOREIGN KEY (IdMembro) REFERENCES Membro(IdMembro),
   FOREIGN KEY (IdProjeto) REFERENCES Projeto(IdProjeto)
 );
+
 --------------problema5
-CREATE TABLE CustoElegivel
+CREATE TABLE CustoElegivelEquipa
 (
   IdCustoElegivel INT NOT NULL,
   IdEquipa INT NOT NULL,
-  IdProjeto INT NOT NULL,
   CustoEquipa DECIMAL(15, 2) NOT NULL,
-  CustoProjeto DECIMAL(15, 2) NOT NULL,
   IdFinanciamento INT NOT NULL,
   PRIMARY KEY (IdCustoElegivel),
   FOREIGN KEY (IdFinanciamento) REFERENCES Financiamento(IdFinanciamento),
   FOREIGN KEY (IdEquipa) REFERENCES Equipa(IdEquipa),
+);
+
+CREATE TABLE CustoElegivelProjeto
+(
+  IdCustoElegivel INT NOT NULL,
+  IdProjeto INT NOT NULL,
+  CustoProjeto DECIMAL(15, 2) NOT NULL,
+  IdFinanciamento INT NOT NULL,
+  PRIMARY KEY (IdCustoElegivel),
+  FOREIGN KEY (IdFinanciamento) REFERENCES Financiamento(IdFinanciamento),
   FOREIGN KEY (IdProjeto) REFERENCES Projeto(IdProjeto)
 );
 

@@ -58,6 +58,7 @@ INSERT INTO AreaCientifica (IdArea, NomeArea) VALUES
 INSERT INTO PalavraChave (IdPalavraChave, PalavraChave) VALUES
 (1, 'Inteligência Artificial'),
 (2, 'Sustentabilidade');
+
 ---- trigger para quando um membro é metido no projeto, automaticamente seja classificado com líder do projeto
 INSERT INTO Posicao (IdPosicao, NomePosicao) VALUES
 (1, 'Líder'),
@@ -70,14 +71,14 @@ INSERT INTO Financiador (IdFinanciador, TipoFinanciador) VALUES
 (2, 'Programa');
 
 ----FALTA
+INSERT INTO Projeto (IdProjeto, NomeProjeto, Descricao, IdData, IdInstituicao, IdEstado, IdArea, IdDominio, IdInterno) VALUES
+(1, 'Projeto Alpha', 'Pesquisa sobre sustentabilidade', 1, 1, 1, 1, 1, 5),
+(2, 'Projeto Beta', 'Desenvolvimento de IA', 2, 2, 6, 2, 2, 6);
+
 INSERT INTO Financiamento (IdFinanciamento, Valor, TipoFinanciamento, OrigemFinanciamento, IdFinanciador, TipoFinanciador, IdProjeto_Servico, TipoProjeto_Servico) VALUES
 (1, 1000.00, 'Não Competitivo', 'Interno', 1, 'Instituicao', 1, 'Servico'),
-(2, 2000.00, 'Competitivo', 'Externo', 1, 'Programa', 2, 'Projeto');
-
-
-INSERT INTO Projeto (IdProjeto, NomeProjeto, Descricao, IdData, IdInstituicao, IdEstado, IdArea, IdDominio, IdMembro) VALUES
-(1, 'Projeto Alpha', 'Pesquisa sobre sustentabilidade', 1, 1, 1, 1, 1, 1),
-(2, 'Projeto Beta', 'Desenvolvimento de IA', 2, 2, 6, 2, 2, 2);
+(2, 2000.00, 'Competitivo', 'Externo', 1, 'Programa', 2, 'Projeto'),
+(3, 200.00, 'Competitivo', 'Externo', 1, 'Programa', 2, 'Projeto');
 
 INSERT INTO Equipa (IdEquipa, IdMembro, IdProjeto) VALUES
 (1, 1, 1),
@@ -85,17 +86,22 @@ INSERT INTO Equipa (IdEquipa, IdMembro, IdProjeto) VALUES
 (2, 2, 2);
 
 --uma função para garantir que o IdFinanciamento aqui presente precisa ter o tipo "Projeto" no Financiamento
-INSERT INTO CustoElegivel (IdCustoElegivel, IdEquipa, IdProjeto, CustoEquipa, CustoProjeto, IdFinanciamento) VALUES
-(1, 1, 1, 600.00, 400.00, 1),
-(2, 2, 2, 1000.00, 10000.00, 2);
+INSERT INTO CustoElegivelEquipa (IdCustoElegivel, IdEquipa, CustoEquipa, IdFinanciamento) VALUES
+(1, 1, 600.00, 1),
+(2, 2, 1000.00, 2);
+
+INSERT INTO CustoElegivelProjeto (IdCustoElegivel, IdProjeto, CustoProjeto, IdFinanciamento) VALUES
+(1, 1, 400.00, 1),
+(2, 2, 10000.00, 2);
 
 INSERT INTO AssociarPalavraChave (IdAssociacao, IdProjeto, IdPalavraChave) VALUES
 (1, 1, 2),  
 (2, 2, 1);  
+
 -- uma função para garantir que o IdFinanciamento aqui presente tenha o tipo como "servico"
-INSERT INTO PrestacaoServico (IdPrestacaoServico, NomePrestacaoServico, Descricao, IdInterno, IdData, IdEstado, IdFinanciamento) VALUES
-(1, 'Consultoria Ambiental', 'Serviço de consultoria em práticas sustentáveis', 1, 1, 1, 1),
-(2, 'Desenvolvimento de Software', 'Serviço de desenvolvimento de aplicações de IA', 2, 2, 2, 2);
+INSERT INTO PrestacaoServico (IdPrestacaoServico, NomePrestacaoServico, Descricao, IdInterno, IdData, IdEstado) VALUES
+(1, 'Consultoria Ambiental', 'Serviço de consultoria em práticas sustentáveis', 1, 1, 1),
+(2, 'Desenvolvimento de Software', 'Serviço de desenvolvimento de aplicações de IA', 2, 2, 2);
 
 INSERT INTO Atividade (IdAtividade, NomeAtividade, TipoAtividade, IdProjeto_Servico, TipoProjeto_Servico) VALUES
 (1, 'Pesquisa de Campo', 'Pesquisa', 1, 'Servico'),

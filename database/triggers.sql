@@ -19,14 +19,12 @@ on [table_name]
 --sendo também considerada para os membros da equipa de investigação a percentagem mínima de tempo de dedicação de 15%.
 
 ----trigger inserir Tabela Pessoa, Membro, Interno, Externo---------------------
-CREATE PROCEDURE InserirPessoa 
-(
-    @PrimeiroNome VARCHAR(250),
-    @UltimoNome VARCHAR(250),
-    @Email VARCHAR(250),
-    @Telefone VARCHAR(20),
-    @TipoMembro VARCHAR(250)
-)
+CREATE PROCEDURE InsertPessoa
+    @PrimeiroNome NVARCHAR(100),
+    @UltimoNome NVARCHAR(100),
+    @Email NVARCHAR(100),
+    @Telefone NVARCHAR(20),
+    @TipoMembro NVARCHAR(50)
 AS
 BEGIN
     DECLARE @newIdPessoa INT;
@@ -89,7 +87,7 @@ GO
 --DROP TRIGGER IF EXISTS after_externo_insert;
 --GO
 
---------------------------trigger Financiador---------------
+--------------------------Trigger Financiador---------------
 CREATE TRIGGER after_instituicao_insert
 ON Instituicao
 AFTER INSERT
@@ -114,7 +112,7 @@ BEGIN
     VALUES (SCOPE_IDENTITY(), 'Programa');
 END
 
-----------------trigger instituição e programa --------------
+----------------Trigger instituição e programa --------------
 -- Criação da sequência para gerar IDs únicos para financiadores
 CREATE SEQUENCE FinanciadorIdSequence
     START WITH 1
@@ -201,7 +199,7 @@ END;
 
 ----------------------------------------------------------------------------
 
---------------Projeto e Prestacao Servico------------------------------------
+--------------Projeto e Prestacao Servico-----------------------------------
 
 -- Gatilho para inserção de projetos e prestação de serviços na tabela Projeto_Servico
 CREATE TRIGGER InsertProjetoServico
@@ -252,4 +250,144 @@ BEGIN
     DEALLOCATE insert_cursor;
 END;
 
-----------------------------------------------------------------------------
+--delete
+
+-- Gatilho de exclusão para a tabela Projeto
+CREATE TRIGGER DeleteProjetoServico
+ON Projeto
+AFTER DELETE
+AS
+BEGIN
+    DELETE FROM Projeto_Servico
+    WHERE IdProjeto_Servico IN (SELECT IdProjeto FROM deleted);
+END;
+GO
+
+-- Gatilho de exclusão para a tabela PrestacaoServico
+CREATE TRIGGER DeletePrestacaoServico
+ON PrestacaoServico
+AFTER DELETE
+AS
+BEGIN
+    DELETE FROM Projeto_Servico
+    WHERE IdProjeto_Servico IN (SELECT IdPrestacaoServico FROM deleted);
+END;
+GO
+
+---------------trigger tornar o interno líder de um projeto líder na tabela de posições---------------------------------
+CREATE TRIGGER TRG_AssignProjectLeader
+ON Projeto
+AFTER INSERT
+AS
+BEGIN
+    DECLARE @IdProjeto INT, @IdInterno INT
+
+    -- Obter o IdProjeto e IdInterno do novo registro inserido na tabela Projeto
+    SELECT @IdProjeto = IdProjeto, @IdInterno = IdInterno FROM inserted
+
+    -- Verificar se o membro já é líder neste projeto
+    IF NOT EXISTS (SELECT 1 FROM PosicaoInterno WHERE IdInterno = @IdInterno AND IdProjeto = @IdProjeto)
+    BEGIN
+        -- Inserir o membro como líder do projeto na tabela PosicaoInterno
+        INSERT INTO PosicaoInterno (IdPosicao, IdInterno, IdProjeto)
+        VALUES (1, @IdInterno, @IdProjeto) -- 1 representa a posição de líder
+    END
+END
+
+---se o interno for atualizado:
+CREATE TRIGGER TRG_UpdateProjectLeader
+ON Projeto
+AFTER UPDATE
+AS
+BEGIN
+    DECLARE @IdProjeto INT, @OldIdInterno INT, @NewIdInterno INT
+
+    -- Obter o IdProjeto, o IdInterno antigo e o novo IdInterno dos registros atualizados na tabela Projeto
+    SELECT @IdProjeto = inserted.IdProjeto, 
+           @NewIdInterno = inserted.IdInterno, 
+           @OldIdInterno = deleted.IdInterno
+    FROM inserted
+    JOIN deleted ON inserted.IdProjeto = deleted.IdProjeto
+
+    -- Se o IdInterno foi alterado
+    IF @OldIdInterno <> @NewIdInterno
+    BEGIN
+        -- Atualizar a tabela PosicaoInterno para refletir a nova liderança
+        UPDATE PosicaoInterno
+        SET IdInterno = @NewIdInterno
+        WHERE IdProjeto = @IdProjeto AND IdPosicao = 1
+        
+        -- Verificar se o novo líder já não é um líder em algum outro projeto
+        IF NOT EXISTS (SELECT 1 FROM PosicaoInterno WHERE IdInterno = @NewIdInterno AND IdProjeto = @IdProjeto)
+        BEGIN
+            -- Atualizar o membro antigo como não sendo mais líder
+            DELETE FROM PosicaoInterno WHERE IdInterno = @OldIdInterno AND IdProjeto = @IdProjeto AND IdPosicao = 1
+
+            -- Inserir o novo líder do projeto na tabela PosicaoInterno
+            INSERT INTO PosicaoInterno (IdPosicao, IdInterno, IdProjeto)
+            VALUES (1, @NewIdInterno, @IdProjeto) -- 1 representa a posição de líder
+        END
+    END
+END
+
+-----------------Evitar que o valor da equipa e do projeto sejam maiores que o valor total------------
+
+CREATE TRIGGER TRG_CheckCustoElegivelEquipa
+ON CustoElegivelEquipa
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    DECLARE @IdFinanciamento INT
+    DECLARE @TotalCusto DECIMAL(15, 2)
+    DECLARE @ValorFinanciamento DECIMAL(15, 2)
+    
+    -- Obter o IdFinanciamento do registro inserido ou atualizado
+    SELECT @IdFinanciamento = inserted.IdFinanciamento
+    FROM inserted
+
+    -- Calcular a soma de CustoEquipa e CustoProjeto para o financiamento específico
+    SELECT @TotalCusto = ISNULL(
+        (SELECT SUM(CustoEquipa) FROM CustoElegivelEquipa WHERE IdFinanciamento = @IdFinanciamento), 0) +
+        ISNULL((SELECT SUM(CustoProjeto) FROM CustoElegivelProjeto WHERE IdFinanciamento = @IdFinanciamento), 0)
+    
+    -- Obter o valor total do financiamento específico
+    SELECT @ValorFinanciamento = Valor FROM Financiamento WHERE IdFinanciamento = @IdFinanciamento
+
+    -- Verificar se a soma dos custos não excede o valor do financiamento
+    IF @TotalCusto > @ValorFinanciamento
+    BEGIN
+        -- Abortar a operação se a soma dos custos exceder o valor do financiamento
+        RAISERROR('A soma dos custos excede o valor do financiamento.', 16, 1)
+        ROLLBACK TRANSACTION
+    END
+END
+
+CREATE TRIGGER TRG_CheckCustoElegivelProjeto
+ON CustoElegivelProjeto
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    DECLARE @IdFinanciamento INT
+    DECLARE @TotalCusto DECIMAL(15, 2)
+    DECLARE @ValorFinanciamento DECIMAL(15, 2)
+    
+    -- Obter o IdFinanciamento do registro inserido ou atualizado
+    SELECT @IdFinanciamento = inserted.IdFinanciamento
+    FROM inserted
+
+    -- Calcular a soma de CustoEquipa e CustoProjeto para o financiamento específico
+    SELECT @TotalCusto = ISNULL(
+        (SELECT SUM(CustoEquipa) FROM CustoElegivelEquipa WHERE IdFinanciamento = @IdFinanciamento), 0) +
+        ISNULL((SELECT SUM(CustoProjeto) FROM CustoElegivelProjeto WHERE IdFinanciamento = @IdFinanciamento), 0)
+    
+    -- Obter o valor total do financiamento específico
+    SELECT @ValorFinanciamento = Valor FROM Financiamento WHERE IdFinanciamento = @IdFinanciamento
+
+    -- Verificar se a soma dos custos não excede o valor do financiamento
+    IF @TotalCusto > @ValorFinanciamento
+    BEGIN
+        -- Abortar a operação se a soma dos custos exceder o valor do financiamento
+        RAISERROR('A soma dos custos excede o valor do financiamento.', 16, 1)
+        ROLLBACK TRANSACTION
+    END
+END
