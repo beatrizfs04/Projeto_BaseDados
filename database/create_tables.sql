@@ -29,7 +29,7 @@ CREATE TABLE Externo
 
 CREATE TABLE Membro
 (
-  IdMembro INT NOT NULL,
+  IdMembro INT IDENTITY(1,1) NOT NULL,
   IdPessoa INT NOT NULL,
   TipoMembro VARCHAR(250) NOT NULL,
   PRIMARY KEY (IdMembro),
@@ -162,7 +162,7 @@ CREATE TABLE Financiamento
   IdFinanciador INT NOT NULL,
   TipoFinanciador VARCHAR(50) NOT NULL, 
   IdProjeto_Servico INT NOT NULL,
-  VARCHAR(50) NOT NULL, 
+  TipoProjeto_Servico VARCHAR(50) NOT NULL, 
   PRIMARY KEY (IdFinanciamento),
   FOREIGN KEY (IdProjeto_Servico, TipoProjeto_Servico) REFERENCES Projeto_Servico(IdProjeto_Servico, TipoProjeto_Servico),
   FOREIGN KEY (IdFinanciador, TipoFinanciador) REFERENCES Financiador(IdFinanciador, TipoFinanciador)
