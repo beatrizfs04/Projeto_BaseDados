@@ -163,12 +163,13 @@
                     </select>
 
                     Investigador Responsável: <!--(IdMembro)--> 
-                    <select>
+                    <select name="Investigador" id="investigador">
                         <!-- 
                             Crio um select que vá buscar à base de dados 
                             "Membros" todos os possiveis investigadores? Ou
                             crio um input do tipo "texto" para escrever o id? 
                         -->
+                        <option value="">Selecionar Um Investigador</option>
                     </select>
 
                     Palavras Chaves Associadas: <!--(Tabela AssociarPalavraChave)--> 
@@ -218,6 +219,29 @@
             </div>
         </main>
         <script src="mudar_divs"></script>
+        <script>
+            async function fetchProjects() {
+              try {
+                const response = await fetch('/api/getInvestigadores');
+                if (!response.ok) {
+                  throw new Error('Network response was not ok');
+                }
+                const projects = await response.json();
+                const dropdown = document.getElementById('investigador');
+                projects.forEach(project => {
+                  const option = document.createElement('option');
+                  option.value = project.IdPessoa;
+                  option.text = `${project.IdPessoa} - ${project.PrimeiroNome} ${project.UltimoNome}`;
+                  dropdown.add(option);
+                });
+              } catch (error) {
+                console.error('Failed to fetch projects:', error);
+              }
+            }
+        
+            // Fetch projects when the page loads
+            window.onload = fetchProjects;
+        </script>
     </body>
     <script src="index.js"></script>
 </html>

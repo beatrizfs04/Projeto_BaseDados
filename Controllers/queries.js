@@ -124,6 +124,17 @@ queries.get("/estado_membro", async (req, res) => {
     const { IdMembro } = req.body;
     if (!IdMembro || isNaN(IdMembro) || IdMembro < 0) { res.status(400).send("ID do Membro Inválido."); return; }
     const query = "SELECT DISTINCT TA.IdMembro, TA.TempoTrabalho, TA.IdAtividade FROM TempoAtividade";
+    const sqlRequest = new sql.Request();
+    const result = await sqlRequest.query(query);
+    res.status(200).send(result.recordset);
 });
+
+/* UI Page */
+queries.get("/getInvestigadores", async (req, res) => {
+    const query = "SELECT DISTINCT P.PrimeiroNome, P.UltimoNome, P.IdPessoa FROM Pessoa P JOIN Interno I ON I.IdPessoa = P.IdPessoa";
+    const sqlRequest = new sql.Request();
+    const result = await sqlRequest.query(query);
+    res.status(200).send(result.recordset);
+})
 
 module.exports = queries;
