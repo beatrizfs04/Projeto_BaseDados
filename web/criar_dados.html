@@ -113,13 +113,15 @@
                     <textarea></textarea>
                     
                     Estado atual: <!--(IdEstado)--> 
-                    <input type="checkbox" name="aprovado"><label for="aprovado">aprovado</label>
-                    <input type="checkbox" name="cancelado"><label for="cancelado">cancelado</label>
-                    <input type="checkbox" name="concluído"><label for="concluído">concluído</label>
-                    <input type="checkbox" name="em curso"><label for="em curso">em curso</label>
-                    <input type="checkbox" name="encerrado"><label for="encerrado">encerrado</label>
-                    <input type="checkbox" name="renovado"><label for="renovado">renovado</label>
-                    <input type="checkbox" name="em submissão"><label for="em submissão">em submissão</label> <!--
+                    <select name="Estado" id="estado">
+                        <option value="aprovado">aprovado</option>
+                        <option value="cancelado">cancelado</option>
+                        <option value="concluído">concluído</option>
+                        <option value="em curso">em curso</option>
+                        <option value="encerrado">encerrado</option>
+                        <option value="renovado">renovado</option>
+                        <option value="em submissão">em submissão</option>
+                    </select> <!--
                     _____________________________________________________________________________________________
                     |                                                                                           |
                     |  - Dúvida: mantemos o renovado, sabendo que vai envolver uma comlpexidade com datas       |
