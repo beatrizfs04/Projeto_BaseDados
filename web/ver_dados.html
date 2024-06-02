@@ -28,10 +28,104 @@
                     <button id="serviço" type="button">Prestação de Serviço</button>
                 </div>
                 <div class="escolhaProjeto">
-                    Escolha Projeto
+                    <h3>Escolha um Projeto.</h3>
+
+                    <form>
+                        <h2>Projeto</h2>
+                        <!-- 
+                            DUVIDA: 
+                            Apresenta-se pelo Id e pelo Nome?
+                        -->
+                        Projeto: <!--(NomeProjeto)--> 
+                        <select name="Projeto" id="projeto">
+                            <option value=""></option> 
+                            <!-- Buscar valores à base de dados -->
+                        </select><br>
+                    </form>
+
+                    <div class="container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>IdProjeto</th>
+                                    <th>NomeProjeto</th>
+                                    <th>Descricao</th>
+                                    <th>IdData</th>
+                                    <th>IdInstituicao</th>
+                                    <th>IdEstado</th>
+                                    <th>IdArea</th>
+                                    <th>IdDominio</th>
+                                    <th>IdFinanciamento</th>
+                                    <th>IdEquipaResponsavel</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Os dados têm que, através do script, ser inseridos aqui -->
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+    
+                <!--Prestação de Serviço-->
                 <div class="escolhaServiço">
-                    Escolha Serviço
+                    <h3>Escolha uma Prestação de Serviço.</h3>
+    
+                    <form>
+                        <h2>Pretação de Serviço</h2>
+                        <!-- 
+                            DUVIDA: 
+                            Apresenta-se pelo Id e pelo Nome?
+                        -->
+                        Prestação de Serviço: <!--(NomeServiço)--> 
+                        <select name="Serviço" id="serviço">
+                            <option value=""></option> 
+                            <!-- Buscar valores à base de dados -->
+                        </select><br>
+                    </form>
+
+                    <div class="container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>IdPServico</th>
+                                    <th>NomeServico</th>
+                                    <th>Descricao</th>
+                                    <th>IdData</th>
+                                    <th>IdEstado</th>
+                                    <th>IdArea</th>
+                                    <th>IdDominio</th>
+                                    <th>IdFinanciamento</th>
+                                    <th>IdMembroResponsavel</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Os dados têm que, através do script, ser inseridos aqui -->
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
         </main>

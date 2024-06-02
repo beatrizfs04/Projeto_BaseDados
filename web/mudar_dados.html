@@ -28,10 +28,92 @@
                     <button id="serviço" type="button">Prestação de Serviço</button>
                 </div>
                 <div class="escolhaProjeto">
-                    Escolha Projeto
+                    <h3>Preencha os seguintes dados para mudar um Projeto.</h3>
+
+                    <form>
+                        <h2>Projeto</h2>
+                        Projeto: <!--(IdProjeto e NomeProjeto)-->
+                        <select name="Projeto" id="projeto">
+                            <option value=""></option>
+                            <!-- Buscar dados à base de dados -->
+                        </select><br>
+                        
+                        Novo Nome do Projeto:
+                        <input type="text"><br>
+                        
+                        Nova Descrição: <!--(Descricao)--> 
+                        <textarea></textarea><br>
+                        
+                        Novo Estado atual: <!--(IdEstado)--> 
+                        <select name="Estado" id="estado">
+                            <option value="aprovado">aprovado</option>
+                            <option value="cancelado">cancelado</option>
+                            <option value="concluído">concluído</option>
+                            <option value="em curso">em curso</option>
+                            <option value="encerrado">encerrado</option>
+                            <option value="renovado">renovado</option>
+                            <option value="em submissão">em submissão</option>
+                        </select><br> 
+    
+                        Nova DataFim: <!--(IdData) - Coloco sempre ou ainda tenho que colocar algo extra?--> 
+                        <input type="date"><br> 
+    
+                        Novo Investigador: <!--(IdMembro)--> 
+                        <select name="Investigador" id="investigador">
+                            <option value=""></option> 
+                            <!-- Buscar valores à base de dados -->
+                        </select><br>
+    
+                        Novas Palavras Chaves Associadas: <!--(Tabela AssociarPalavraChave)--> 
+                        <select name="PalavrasChaves" id="chaves">
+                            <option value=""></option> 
+                            <!-- Buscar valores à base de dados -->
+                        </select><br>
+                    </form>
                 </div>
                 <div class="escolhaServiço">
-                    Escolha Serviço
+                    <h3>Preencha os seguintes dados para mudar uma Prestação de Serviço.</h3>
+
+                    <form>
+                        <h2>Prestação de Serviço</h2>
+                        Prestação de Serviço: <!--(IdPrestaçãoServiço e NomePrestaçãoServiço)-->
+                        <select name="PrestaçãoServiço" id="serviço">
+                            <option value=""></option>
+                            <!-- Buscar dados à base de dados -->
+                        </select><br>
+                        
+                        Novo Nome da Prestação de Serviço: <!--(NomeServiço)--> 
+                        <input type="text"><br>
+                        
+                        Nova Descrição: <!--(Descricao)--> 
+                        <textarea></textarea><br>
+                        
+                        Novo Estado atual: <!--(IdEstado)--> 
+                        <select name="Estado" id="estado"> 
+                            <option value="aprovado">aprovado</option>
+                            <option value="cancelado">cancelado</option>
+                            <option value="concluído">concluído</option>
+                            <option value="em curso">em curso</option>
+                            <option value="encerrado">encerrado</option>
+                            <option value="renovado">renovado</option>
+                            <option value="em submissão">em submissão</option>
+                        </select><br> 
+
+                        Nova DataFim: <!--(IdData)--> 
+                        <input type="date"><br>
+
+                        Novo Interno Responsável: <!--(IdInterno)--> 
+                        <select name="Responsável" id="responsável">
+                            <option value=""></option>
+                            <!-- Buscar valores à base de dados -->
+                        </select><br>
+                        
+                        Novas Palavras Chaves Associadas: <!--(Tabela AssociarPalavraChave)--> 
+                        <select name="PalavrasChaves" id="chaves">
+                            <option value=""></option> 
+                            <!-- Buscar valores à base de dados -->
+                        </select>
+                    </form>
                 </div>
             </section>
         </main>

@@ -169,3 +169,38 @@ form button:hover {
 .features-list li:hover {
     background-color: #0a00364b;
 }
+
+/* Tabela */
+.container {
+    padding-top: 50px;
+    width: 100%;
+    margin: auto;
+    overflow-x: auto; 
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid black;
+    border-radius: 15px;
+    overflow: hidden; 
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    border: 1px solid black;
+}
+
+thead tr {
+    background-color: white;
+    color: black;
+}
+
+tbody tr {
+    background-color: rgb(209, 209, 209);
+    color: black;
+}
