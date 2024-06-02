@@ -15,7 +15,7 @@ queries.get("/estado_projeto/:IdProjeto", async (req, res) => {
 });
 
 queries.get("/financiamento_projetos", async (req, res) => {
-    const query = "SELECT DISTINCT P.IdProjeto, P.NomeProjeto, F.Valor FROM Projeto P, Financiamento F WHERE F.IdFinanciador = P.IdProjeto AND F.TipoFinanciador LIKE 'projeto' ORDER BY VALOR DESC";
+    const query = "SELECT DISTINCT P.IdProjeto, P.NomeProjeto, F.Valor FROM Projeto P JOIN Financiamento F ON F.IdFinanciador = P.IdProjeto JOIN Financiamento_Projeto_PrestacaoServico FPP ON FPP.TipoProjeto_Servico LIKE 'Projeto' ORDER BY F.VALOR DESC";
     const sqlRequest = new sql.Request();
     const result = await sqlRequest.query(query);
     res.status(200).send(result.recordset);
@@ -29,7 +29,7 @@ queries.get("/membros_projetos", async (req, res) => {
 });
 
 queries.get("/instituicao_projetos_financiamentos", async (req, res) => {
-    const query = "SELECT DISTINCT I.NomeInstituicao, COUNT(F.IdFinanciamento) as QuantidadeFinanciamentos FROM Instituicao I JOIN Financiamento F ON F.IdFinanciador = I.IdInstituicao JOIN Financiador Fin ON Fin.IdFinanciador = F.IdFinanciador AND Fin.TipoFinanciador LIKE 'Projeto' GROUP BY I.NomeInstituicao ORDER BY QuantidadeFinanciamentos DESC";
+    const query = "SELECT DISTINCT I.NomeInstituicao, COUNT(F.IdFinanciamento) as QuantidadeFinanciamentos FROM Instituicao I JOIN Financiamento F ON F.IdFinanciador = I.IdInstituicao JOIN Financiamento_Projeto_PrestacaoServico Fin ON Fin.IdProjeto_Servico = F.IdFinanciador AND Fin.TipoProjeto_Servico LIKE 'Projeto' GROUP BY I.NomeInstituicao ORDER BY QuantidadeFinanciamentos DESC";
     const sqlRequest = new sql.Request();
     const result = await sqlRequest.query(query);
     res.status(200).send(result.recordset);
@@ -43,7 +43,7 @@ queries.get("/publicacoes_projetos", async (req, res) => {
 });
 
 queries.get("/instituicoes_financiamento", async (req, res) => {
-    const query = "SELECT DISTINCT I.NomeInstituicao, COUNT(F.IdFinanciamento) as QuantidadeFinanciamentos FROM Instituicao I JOIN Financiamento F ON I.IdFinanciador = I.IdInstituicao JOIN Financiador Fin ON F.IdFinanciadoor = Fin.IdFinanciador AND Fin.TipoFinanciador LIKE 'Instituição' GROUP BY I.NomeInstituicao ORDER BY QuantidadeFinanciamentos DESC";
+    const query = "SELECT DISTINCT I.NomeInstituicao, COUNT(F.IdFinanciamento) as QuantidadeFinanciamentos FROM Instituicao I JOIN Financiamento F ON F.IdFinanciador = I.IdInstituicao JOIN Financiador Fin ON Fin.IdFinanciador = F.IdFinanciador AND Fin.TipoFinanciador LIKE 'Instituicao' GROUP BY I.NomeInstituicao ORDER BY QuantidadeFinanciamentos DESC";
     const sqlRequest = new sql.Request();
     const result = await sqlRequest.query(query);
     res.status(200).send(result.recordset);
@@ -194,6 +194,13 @@ queries.get("/getFinanciadores", async (req, res) => {
 
 queries.get("/getProjetos", async (req, res) => {
     const query = "SELECT DISTINCT IdProjeto, NomeProjeto, Descricao, IdData, IdInstituicao, IdEstado, IdArea, IdDominio FROM Projeto";
+    const sqlRequest = new sql.Request();
+    const result = await sqlRequest.query(query);
+    res.status(200).send(result.recordset);
+})
+
+queries.get("/getPrestServicos", async (req, res) => {
+    const query = "SELECT DISTINCT IdPrestacaoServico, NomePrestacaoServico, IdInterno, IdData, IdEstado FROM PrestacaoServico";
     const sqlRequest = new sql.Request();
     const result = await sqlRequest.query(query);
     res.status(200).send(result.recordset);
