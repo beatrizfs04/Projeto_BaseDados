@@ -337,8 +337,35 @@ BEGIN
     END;
 END;
 
----agora preciso de um trigger para garantir que a equipa de um projeto não use o 
---custo elegivel (idfinanciamento) associado a outro projeto!!
+---trigger para garantir que a equipa de um projeto não use o 
+--custo elegivel (idfinanciamento) associado a outro porjeto!!
+
+CREATE TRIGGER AssociarFinanciamentoEquipa
+ON CustoElegivelEquipa
+INSTEAD OF INSERT
+AS
+BEGIN
+    -- Verificar se o financiamento associado à equipe corresponde ao financiamento do projeto
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN Equipa e ON i.IdEquipa = e.IdEquipa
+        INNER JOIN Projeto p ON e.IdProjeto = p.IdProjeto
+        INNER JOIN Projeto_Servico ps ON p.IdProjeto = ps.IdProjeto_Servico AND ps.TipoProjeto_Servico = 'Projeto'
+        INNER JOIN Financiamento_Projeto_PrestacaoServico fpps ON ps.IdProjeto_Servico = fpps.IdProjeto_Servico AND ps.TipoProjeto_Servico = fpps.TipoProjeto_Servico
+        WHERE i.IdFinanciamento <> fpps.IdFinanciamento
+    )
+    BEGIN
+        RAISERROR('O financiamento associado à equipa não corresponde ao financiamento do projeto.', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END;
+
+    -- Se o financiamento estiver correto, inserir os registros na tabela CustoElegivelEquipa
+    INSERT INTO CustoElegivelEquipa (IdCustoElegivelEquipa, IdEquipa, CustoEquipa, IdFinanciamento)
+    SELECT IdCustoElegivelEquipa, IdEquipa, CustoEquipa, IdFinanciamento FROM inserted;
+END;
+
 
 ---------------trigger tornar o interno líder de um projeto líder na tabela de posições---------------------------------
 CREATE TRIGGER TRG_AssignProjectLeader
@@ -354,44 +381,142 @@ BEGIN
     -- Verificar se o membro já é líder neste projeto
     IF NOT EXISTS (SELECT 1 FROM PosicaoInterno WHERE IdInterno = @IdInterno AND IdProjeto = @IdProjeto)
     BEGIN
+        -- Verificar se a posição de líder já existe, se não, insere
+        IF NOT EXISTS (SELECT 1 FROM Posicao WHERE IdPosicao = 1)
+        BEGIN
+            INSERT INTO Posicao (IdPosicao, NomePosicao)
+            VALUES (1, 'Líder')
+        END
+
         -- Inserir o membro como líder do projeto na tabela PosicaoInterno
         INSERT INTO PosicaoInterno (IdPosicao, IdInterno, IdProjeto)
         VALUES (1, @IdInterno, @IdProjeto) -- 1 representa a posição de líder
     END
 END
 
----se o interno for atualizado:
-CREATE TRIGGER TRG_UpdateProjectLeader
-ON Projeto
-AFTER UPDATE
+-- Gatilho para garantir que uma equipe esteja associada apenas a um projeto
+CREATE TRIGGER TRG_CheckTeamProjectAssociation
+ON Equipe
+INSTEAD OF INSERT
 AS
 BEGIN
-    DECLARE @IdProjeto INT, @OldIdInterno INT, @NewIdInterno INT
+    DECLARE @IdEquipa INT, @IdProjeto INT
 
-    -- Obter o IdProjeto, o IdInterno antigo e o novo IdInterno dos registros atualizados na tabela Projeto
-    SELECT @IdProjeto = inserted.IdProjeto, 
-           @NewIdInterno = inserted.IdInterno, 
-           @OldIdInterno = deleted.IdInterno
-    FROM inserted
-    JOIN deleted ON inserted.IdProjeto = deleted.IdProjeto
-
-    -- Se o IdInterno foi alterado
-    IF @OldIdInterno <> @NewIdInterno
+    -- Verificar se o projeto já tem uma equipe associada
+    IF EXISTS (SELECT 1 FROM inserted WHERE IdProjeto IN (SELECT IdProjeto FROM Projeto))
     BEGIN
-        -- Atualizar a tabela PosicaoInterno para refletir a nova liderança
-        UPDATE PosicaoInterno
-        SET IdInterno = @NewIdInterno
-        WHERE IdProjeto = @IdProjeto AND IdPosicao = 1
-        
-        -- Verificar se o novo líder já não é um líder em algum outro projeto
-        IF NOT EXISTS (SELECT 1 FROM PosicaoInterno WHERE IdInterno = @NewIdInterno AND IdProjeto = @IdProjeto)
-        BEGIN
-            -- Atualizar o membro antigo como não sendo mais líder
-            DELETE FROM PosicaoInterno WHERE IdInterno = @OldIdInterno AND IdProjeto = @IdProjeto AND IdPosicao = 1
+        RAISERROR('O projeto já possui uma equipe associada.', 16, 1)
+        ROLLBACK TRANSACTION
+        RETURN
+    END
 
-            -- Inserir o novo líder do projeto na tabela PosicaoInterno
-            INSERT INTO PosicaoInterno (IdPosicao, IdInterno, IdProjeto)
-            VALUES (1, @NewIdInterno, @IdProjeto) -- 1 representa a posição de líder
-        END
+    -- Inserir as equipes
+    INSERT INTO Equipe (IdEquipa, IdProjeto)
+    SELECT IdEquipa, IdProjeto FROM inserted
+END
+
+-- Gatilho para garantir que um projeto esteja associado a um financiamento
+CREATE TRIGGER TRG_CheckProjectFinancingAssociation
+ON Projeto
+INSTEAD OF INSERT
+AS
+BEGIN
+    DECLARE @IdProjeto INT, @IdFinanciamento INT
+
+    -- Verificar se o projeto já tem um financiamento associado
+    IF EXISTS (SELECT 1 FROM inserted WHERE IdFinanciamento IN (SELECT IdFinanciamento FROM Financiamento))
+    BEGIN
+        RAISERROR('O projeto já possui um financiamento associado.', 16, 1)
+        ROLLBACK TRANSACTION
+        RETURN
+    END
+
+    -- Inserir os projetos
+    INSERT INTO Projeto (IdProjeto, IdFinanciamento)
+    SELECT IdProjeto, IdFinanciamento FROM inserted
+END
+
+-- Gatilho para garantir que uma equipe esteja associada a um financiamento
+CREATE TRIGGER TRG_AssociateTeamWithFinancing
+ON CustoElegivelEquipa
+AFTER INSERT
+AS
+BEGIN
+    DECLARE @IdEquipa INT, @IdFinanciamento INT
+
+    -- Obter o ID do financiamento associado à equipe
+    SELECT @IdFinanciamento = IdFinanciamento FROM inserted
+
+    -- Verificar se a equipe está associada ao mesmo financiamento do projeto
+    IF NOT EXISTS (SELECT 1 FROM Projeto WHERE IdProjeto IN (SELECT IdProjeto FROM Equipe WHERE IdEquipa IN (SELECT IdEquipa FROM inserted)) AND IdFinanciamento = @IdFinanciamento)
+    BEGIN
+        RAISERROR('A equipe não está associada ao mesmo financiamento do projeto.', 16, 1)
+        ROLLBACK TRANSACTION
+        RETURN
     END
 END
+
+---------------garantir que uma atividade de um projeto, esteja sendo realizada por um
+----memebro que pertence a uma equipa daquele projeto:
+CREATE TRIGGER VerificarAssociacaoAtividade
+ON TempoAtividade
+INSTEAD OF INSERT
+AS
+BEGIN
+    -- Verificar se o membro está associado a uma atividade de um projeto
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN Atividade a ON i.IdAtividade = a.IdAtividade
+        INNER JOIN Projeto_Servico ps ON a.IdProjeto_Servico = ps.IdProjeto_Servico AND a.TipoProjeto_Servico = ps.TipoProjeto_Servico
+        INNER JOIN Equipa_Membro em ON i.IdMembro = em.IdMembro
+        INNER JOIN Equipa e ON em.IdEquipa = e.IdEquipa AND e.IdProjeto = ps.IdProjeto_Servico -- Verifica se o membro está na equipe do projeto associado à atividade
+    )
+    BEGIN
+        -- Se o membro está associado a uma atividade de um projeto, permitir a inserção na tabela TempoAtividade
+        INSERT INTO TempoAtividade (IdMembro, TempoTrabalho, IdAtividade)
+        SELECT IdMembro, TempoTrabalho, IdAtividade FROM inserted;
+    END
+    ELSE
+    BEGIN
+        -- Se o membro não está associado a uma atividade de um projeto, lançar um erro e desfazer a transação
+        RAISERROR('Um membro nao pode realizar uma atividade para um projeto se nao estiver na equipa deste projeto', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END;
+END;
+
+--------------ATIVIDADE TEMPO------------
+
+
+
+
+
+--------------- n sei se é valida:
+CREATE TRIGGER VerificarAssociacaoAtividade
+ON TempoAtividade
+INSTEAD OF INSERT
+AS
+BEGIN
+    -- Verificar se o membro está associado a uma atividade de um projeto
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN Atividade a ON i.IdAtividade = a.IdAtividade
+        INNER JOIN Projeto_Servico ps ON a.IdProjeto_Servico = ps.IdProjeto_Servico AND a.TipoProjeto_Servico = ps.TipoProjeto_Servico
+        INNER JOIN Equipa_Membro em ON i.IdMembro = em.IdMembro
+        INNER JOIN Equipa e ON em.IdEquipa = e.IdEquipa AND e.IdProjeto = ps.IdProjeto_Servico -- Verifica se o membro está na equipe do projeto associado à atividade
+    )
+    BEGIN
+        -- Se o membro está associado a uma atividade de um projeto, permitir a inserção na tabela TempoAtividade
+        INSERT INTO TempoAtividade (IdMembro, TempoTrabalho, IdAtividade)
+        SELECT IdMembro, TempoTrabalho, IdAtividade FROM inserted;
+    END
+    ELSE
+    BEGIN
+        -- Se o membro não está associado a uma atividade de um projeto, lançar um erro e desfazer a transação
+        RAISERROR('Um membro nao pode realizar uma atividade para um projeto se nao estiver na equipa deste projeto', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END;
+END;

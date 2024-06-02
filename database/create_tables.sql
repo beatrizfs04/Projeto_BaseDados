@@ -188,22 +188,22 @@ CREATE TABLE Equipa_Membro
 --------------problema5
 CREATE TABLE CustoElegivelEquipa
 (
-  IdCustoElegivel INT NOT NULL,
+  IdCustoElegivelEquipa INT NOT NULL,
   IdEquipa INT NOT NULL,
   CustoEquipa DECIMAL(15, 2) NOT NULL,
   IdFinanciamento INT NOT NULL,
-  PRIMARY KEY (IdCustoElegivel),
+  PRIMARY KEY (IdCustoElegivelEquipa),
   FOREIGN KEY (IdFinanciamento) REFERENCES Financiamento(IdFinanciamento),
   FOREIGN KEY (IdEquipa) REFERENCES Equipa(IdEquipa),
 );
 
 CREATE TABLE CustoElegivelProjeto
 (
-  IdCustoElegivel INT NOT NULL,
+  IdCustoElegivelProjeto INT NOT NULL,
   IdProjeto INT NOT NULL,
   CustoProjeto DECIMAL(15, 2) NOT NULL,
   IdFinanciamento INT NOT NULL,
-  PRIMARY KEY (IdCustoElegivel),
+  PRIMARY KEY (IdCustoElegivelProjeto),
   FOREIGN KEY (IdFinanciamento) REFERENCES Financiamento(IdFinanciamento),
   FOREIGN KEY (IdProjeto) REFERENCES Projeto(IdProjeto)
 );
@@ -225,7 +225,7 @@ CREATE TABLE PrestacaoServico
 
 CREATE TABLE Financiamento_Projeto_PrestacaoServico
 (
-  IdFinanciamento INT IDENTITY(1,1) NOT NULL;
+  IdFinanciamento INT IDENTITY(1,1) NOT NULL,
   IdProjeto_Servico INT NOT NULL,
   TipoProjeto_Servico VARCHAR(50) NOT NULL,
   PRIMARY KEY (IdFinanciamento, IdProjeto_Servico),

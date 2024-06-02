@@ -5,8 +5,8 @@ INSERT INTO Pessoa (IdPessoa, PrimeiroNome, UltimoNome, Email, Telefone) VALUES
 (3, 'Rafael', 'Santos', 'rafael.santos@gmail.com', '145236897');
 
 ----usar esses comandos para inserir (temporariamente a ser adaptado na interface)
----EXEC InserirPessoa 'João', 'Silva', 'joao.silva@example.com', '123456789', 'Interno';
---EXEC InserirPessoa 'Maria', 'Oliveira', 'maria.oliveira@example.com', '987654321', 'Interno';
+EXEC InserirPessoa 'João', 'Silva', 'joao.silva@example.com', '123456789', 'Interno';
+EXEC InserirPessoa 'Maria', 'Oliveira', 'maria.oliveira@example.com', '987654321', 'Interno';
 
 INSERT INTO Interno (IdInterno, IdPessoa) VALUES
 (1, 1),
@@ -100,7 +100,6 @@ INSERT INTO Equipa (IdEquipa, IdProjeto) VALUES
 INSERT INTO Equipa_Membro (IdEquipa, IdMembro) VALUES
 (1, 1)
 
---uma função para garantir que o IdFinanciamento aqui presente precisa ter o tipo "Projeto" no Financiamento
 INSERT INTO CustoElegivelEquipa (IdCustoElegivelEquipa, IdEquipa, CustoEquipa, IdFinanciamento) VALUES
 (1, 1, 600.00, 2),
 (2, 2, 1000.00, 2);
@@ -121,10 +120,8 @@ INSERT INTO Atividade (IdAtividade, NomeAtividade, TipoAtividade, IdProjeto_Serv
 (1, 'Pesquisa de Campo', 'Pesquisa', 1, 'Servico'),
 (2, 'Desenvolvimento de Algoritmo', 'Desenvolvimento', 2, 'Projeto');
 
----- função para garantir que o IdMembro esteja a trabalhar em uma equipa deste projeto para inserir uma atividade
-INSERT INTO TempoAtividade (IdMembro, TempoTrabalho, IdAtividade) VALUES
-(1, 100.00, 1),
-(2, 200.00, 2);
+INSERT INTO TempoAtividade (IdMembro, TempoTrabalho, IdAtividade) 
+VALUES (10, DATEADD(HOUR, 500, '00:00:00'), 10);
 
 INSERT INTO PosicaoInterno (IdPosicao, IdInterno, IdProjeto) VALUES
 (1, 1, 1),  -- João (Interno) no Projeto Alpha como Líder
