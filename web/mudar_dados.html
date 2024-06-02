@@ -128,14 +128,17 @@
                   }
                   const chaves = await response.json();
                   $('#chaves').empty();
-                  $('#chaves_serv').empty();
+                  $('#chaves_sv').empty();
                   const dropdown = document.getElementById('chaves');
-                  const dropdown_sv = document.getElementById('chaves_serv');
+                  const dropdown_sv = document.getElementById('chaves_sv');
                   const option = document.createElement('option');
                   option.value = "";
                   option.text = `Manter a Original`;
                   dropdown.appendChild(option);
-                  const option_serv = document.createElement('option');
+                  const option_sv = document.createElement('option');
+                  option_sv.value = "";
+                  option_sv.text = `Manter a Original`;
+                  dropdown_sv.appendChild(option_sv);
                   chaves.forEach(chave => {
                     const option = document.createElement('option');
                     option.value = chave.IdPalavraChave;
@@ -159,16 +162,26 @@
                   }
                   const projects = await response.json();
                   $('#investigador').empty();
+                  $('#responsavel_sv').empty();
                   const dropdown = document.getElementById('investigador');
+                  const dropdown_sv = document.getElementById('responsavel_sv');
                   const option = document.createElement('option');
                   option.value = "";
                   option.text = `Manter o Original`;
                   dropdown.appendChild(option);
+                  const option_sv = document.createElement('option');
+                  option_sv.value = "";
+                  option_sv.text = `Manter o Original`;
+                  dropdown_sv.appendChild(option_sv);
                   projects.forEach(project => {
                     const option = document.createElement('option');
                     option.value = project.IdPessoa;
                     option.text = `${project.IdPessoa} - ${project.PrimeiroNome} ${project.UltimoNome}`;
                     dropdown.add(option);
+                    const option_sv = document.createElement('option');
+                    option_sv.value = project.IdPessoa;
+                    option_sv.text = `${project.IdPessoa} - ${project.PrimeiroNome} ${project.UltimoNome}`;
+                    dropdown_sv.add(option_sv);
                   });
                 } catch (error) {
                   console.error('Failed to fetch projects:', error);
@@ -190,8 +203,8 @@
                   dropdown.appendChild(option);
                   projects.forEach(project => {
                     const option = document.createElement('option');
-                    option.value = project.IdProjeto;
-                    option.text = `${project.NomeProjeto}`;
+                    option.value = project.IdPrestacaoServico;
+                    option.text = `${project.NomePrestacaoServico}`;
                     dropdown.add(option);
                   });
                 } catch (error) {
@@ -202,6 +215,7 @@
             async function fetchEverything() {
                 fetchPasscodes();
                 fetchPeople();
+                fetchServices();
                 try {
                   const response = await fetch('/api/getProjetos');
                   if (!response.ok) {

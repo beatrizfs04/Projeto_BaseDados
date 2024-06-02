@@ -200,7 +200,7 @@ queries.get("/getProjetos", async (req, res) => {
 })
 
 queries.get("/getPrestServicos", async (req, res) => {
-    const query = "SELECT DISTINCT IdPrestacaoServico, NomePrestacaoServico, Descricao, IdInterno, IdData, IdEstado FROM PrestacaoServico";
+    const query = "SELECT DISTINCT IdPrestacaoServico, NomePrestacaoServico, IdInterno, IdData, IdEstado FROM PrestacaoServico";
     const sqlRequest = new sql.Request();
     const result = await sqlRequest.query(query);
     res.status(200).send(result.recordset);
