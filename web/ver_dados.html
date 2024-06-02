@@ -76,8 +76,7 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>IdProjeto</th>
-                                        <th>NomeProjeto</th>
+                                        <th>NomeInstituição</th>
                                         <th>QuantFinanciamentos</th>
                                     </tr>
                                 </thead>
@@ -110,7 +109,6 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>IdInstituicao</th>
                                         <th>NomeInstituicao</th>
                                         <th>QuantFinanciamentos</th>
                                     </tr>
@@ -131,26 +129,29 @@
                   if (!response.ok) {
                     throw new Error('Network response was not ok');
                   }
-                  const projects = await response.json();
-                  $('#tabelaValueProject').innerHTML = "";
-                  const tableBody = document.getElementById('tabelaValueProject');
-                  projects.forEach(project => {
+                    const projects = await response.json();
+                    $('#tabelaValueProject').innerHTML = "";
+                    const tableBody = document.getElementById('tabelaValueProject');
                     tableBody.innerHTML = '';
-                    const row = document.createElement('tr');
-                    const cell1 = document.createElement('th');
-                    cell1.textContent = project.IdProjeto;
-                    row.appendChild(cell1);
 
-                    const cell2 = document.createElement('th');
-                    cell2.textContent = project.NomeProjeto;
-                    row.appendChild(cell2);
+                    projects.forEach(project => {
+                        const row = document.createElement('tr');
 
-                    const cell3 = document.createElement('th');
-                    cell3.textContent = project.Valor;
-                    row.appendChild(cell3);
+                        const cell1 = document.createElement('th');
+                        cell1.textContent = project.IdProjeto;
+                        row.appendChild(cell1);
 
-                    tableBody.appendChild(row);
-                  });
+                        const cell2 = document.createElement('th');
+                        cell2.textContent = project.NomeProjeto;
+                        row.appendChild(cell2);
+
+                        const cell3 = document.createElement('th');
+                        cell3.textContent = project.Valor;
+                        row.appendChild(cell3);
+
+                        tableBody.appendChild(row);
+                    });
+
                 } catch (error) {
                   console.error('Failed to fetch projects:', error);
                 }
@@ -162,57 +163,58 @@
                   if (!response.ok) {
                     throw new Error('Network response was not ok');
                   }
-                  const projects = await response.json();
-                  $('#tabelaMembersProject').innerHTML = "";
-                  const tableBody = document.getElementById('tabelaMembersProject');
-                  projects.forEach(project => {
+                    const projects = await response.json();
+                    $('#tabelaMembersProject').innerHTML = "";
+                    const tableBody = document.getElementById('tabelaMembersProject');
                     tableBody.innerHTML = '';
-                    const row = document.createElement('tr');
-                    const cell1 = document.createElement('th');
-                    cell1.textContent = project.IdProjeto;
-                    row.appendChild(cell1);
 
-                    const cell2 = document.createElement('th');
-                    cell2.textContent = project.NomeProjeto;
-                    row.appendChild(cell2);
+                    projects.forEach(project => {
+                        const row = document.createElement('tr');
 
-                    const cell3 = document.createElement('th');
-                    cell3.textContent = project.Valor;
-                    row.appendChild(cell3);
+                        const cell1 = document.createElement('th');
+                        cell1.textContent = project.IdProjeto;
+                        row.appendChild(cell1);
 
-                    tableBody.appendChild(row);
-                  });
+                        const cell2 = document.createElement('th');
+                        cell2.textContent = project.NomeProjeto;
+                        row.appendChild(cell2);
+
+                        const cell3 = document.createElement('th');
+                        cell3.textContent = project.QuantidadeMembros;
+                        row.appendChild(cell3);
+
+                        tableBody.appendChild(row);
+                    });
+
                 } catch (error) {
                   console.error('Failed to fetch projects:', error);
                 }
             }
 
-            async function fetchMembers() {
+            async function fetchProjFinances() {
                 try {
                   const response = await fetch('/api/instituicao_projetos_financiamentos');
                   if (!response.ok) {
                     throw new Error('Network response was not ok');
                   }
-                  const projects = await response.json();
-                  $('#tabelaFinancesProject').innerHTML = "";
-                  const tableBody = document.getElementById('tabelaFinancesProject');
-                  projects.forEach(project => {
+                    const projects = await response.json();
+                    $('#tabelaFinancesProject').innerHTML = "";
+                    const tableBody = document.getElementById('tabelaFinancesProject');
                     tableBody.innerHTML = '';
-                    const row = document.createElement('tr');
-                    const cell1 = document.createElement('th');
-                    cell1.textContent = project.IdProjeto;
-                    row.appendChild(cell1);
 
-                    const cell2 = document.createElement('th');
-                    cell2.textContent = project.NomeProjeto;
-                    row.appendChild(cell2);
+                    projects.forEach(project => {
+                        const row = document.createElement('tr');
 
-                    const cell3 = document.createElement('th');
-                    cell3.textContent = project.Valor;
-                    row.appendChild(cell3);
+                        const cell1 = document.createElement('th');
+                        cell1.textContent = project.NomeInstituicao;
+                        row.appendChild(cell1);
 
-                    tableBody.appendChild(row);
-                  });
+                        const cell2 = document.createElement('th');
+                        cell2.textContent = project.QuantidadeFinanciamentos;
+                        row.appendChild(cell2);
+
+                        tableBody.appendChild(row);
+                    });
                 } catch (error) {
                   console.error('Failed to fetch projects:', error);
                 }
@@ -224,26 +226,29 @@
                   if (!response.ok) {
                     throw new Error('Network response was not ok');
                   }
-                  const projects = await response.json();
-                  $('#tabelaPublicationsProject').innerHTML = "";
-                  const tableBody = document.getElementById('tabelaPublicationsProject');
-                  projects.forEach(project => {
+                    const projects = await response.json();
+                    $('#tabelaPublicationsProject').innerHTML = "";
+                    const tableBody = document.getElementById('tabelaPublicationsProject');
                     tableBody.innerHTML = '';
-                    const row = document.createElement('tr');
-                    const cell1 = document.createElement('th');
-                    cell1.textContent = project.IdProjeto;
-                    row.appendChild(cell1);
 
-                    const cell2 = document.createElement('th');
-                    cell2.textContent = project.NomeProjeto;
-                    row.appendChild(cell2);
+                    projects.forEach(project => {
+                        const row = document.createElement('tr');
 
-                    const cell3 = document.createElement('th');
-                    cell3.textContent = project.Valor;
-                    row.appendChild(cell3);
+                        const cell1 = document.createElement('th');
+                        cell1.textContent = project.IdProjeto;
+                        row.appendChild(cell1);
 
-                    tableBody.appendChild(row);
-                  });
+                        const cell2 = document.createElement('th');
+                        cell2.textContent = project.NomeProjeto;
+                        row.appendChild(cell2);
+
+                        const cell3 = document.createElement('th');
+                        cell3.textContent = project.QuantidadePublicacoes;
+                        row.appendChild(cell3);
+
+                        tableBody.appendChild(row);
+                    });
+
                 } catch (error) {
                   console.error('Failed to fetch projects:', error);
                 }
@@ -262,16 +267,12 @@
                     tableBody.innerHTML = '';
                     const row = document.createElement('tr');
                     const cell1 = document.createElement('th');
-                    cell1.textContent = project.IdProjeto;
+                    cell1.textContent = project.NomeInstituicao;
                     row.appendChild(cell1);
 
                     const cell2 = document.createElement('th');
-                    cell2.textContent = project.NomeProjeto;
+                    cell2.textContent = project.QuantidadeFinanciamentos;
                     row.appendChild(cell2);
-
-                    const cell3 = document.createElement('th');
-                    cell3.textContent = project.Valor;
-                    row.appendChild(cell3);
 
                     tableBody.appendChild(row);
                   });
@@ -308,7 +309,9 @@
                 fetchProjects();
                 fetchFinances();
                 fetchMembers();
+                fetchProjFinances();
                 fetchPublications();
+                fetchFinantialsInst();
             }
 
             async function onProjectSelection(event) {
