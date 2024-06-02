@@ -6,6 +6,8 @@ const queries = require('./Controllers/queries');
 const port = 3000;
 const pageTitle = "Projeto Final - Base de Dados";
 
+/* WEB */
+
 app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, '/web/index.html'));
 });
@@ -38,7 +40,11 @@ app.get('/mudar_divs', function(req, res) {
     res.sendFile(path.join(__dirname, '/web/mudar_divs.js'));
 });
 
+/* API */
+
 app.use('/api/', queries);
+
+/* ON LOAD */
 
 app.listen(port, () => {
     console.log(`> ${pageTitle} - http://localhost:${port}`);
