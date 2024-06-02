@@ -90,9 +90,15 @@
                     </select><br>
 
                     <br>
-                    <b>Equipas</b>
-                    Identificador da Equipa(IdEquipa):<br>
-                    Membros Associados(IdMembro):<br>
+                    <h2>Equipas</h2>
+
+                    Quantos membros terá o Projeto:
+                    <input type="number" id="numMembros" maxlength="2" oninput="adicionarCampos()" onkeypress="if(this.value.length>=2) return false;"><br>
+                    
+                    Identifique abaixo os Membros:
+                    <div id="membrosContainer">
+                        <!-- Campos de seleção serão adicionados aqui pelo script: adicionarCampos() -->
+                    </div>
                     
                     <br>
                     <h2>Financiamento</h2>
@@ -258,6 +264,48 @@
         
             // Fetch projects when the page loads
             window.onload = fetchProjects;
+
+            function adicionarCampos() {
+                // Obter o número de membros do input
+                const numeroDeMembros = document.getElementById('numMembros').value;
+                
+                // Local onde os campos de seleção serão adicionados
+                const container = document.getElementById('membrosContainer');
+                
+                // Limpar campos existentes
+                container.innerHTML = '';
+                
+                // Adicionar o número de campos selecionado pelo usuário
+                for (let i = 0; i < numeroDeMembros; i++) {
+                    // Criar o elemento select
+                    const select = document.createElement('select');
+                    select.name = 'Membro';
+                    select.id = `membro${i}`;
+                    
+                    // Adicionar opções ao select (valores de exemplo, substituir por valores da base de dados)
+                    const option1 = document.createElement('option');
+                    option1.value = '';
+                    option1.textContent = '';
+                    
+                    const option2 = document.createElement('option');
+                    option2.value = '1';
+                    option2.textContent = 'Membro 1';
+                    
+                    const option3 = document.createElement('option');
+                    option3.value = '2';
+                    option3.textContent = 'Membro 2';
+                    
+                    select.appendChild(option1);
+                    select.appendChild(option2);
+                    select.appendChild(option3);
+                    
+                    // Adicionar o select ao container
+                    container.appendChild(select);
+                    
+                    // Adicionar uma quebra de linha
+                    container.appendChild(document.createElement('br'));
+                }
+            }
         </script>
     </body>
     <script src="index.js"></script>
