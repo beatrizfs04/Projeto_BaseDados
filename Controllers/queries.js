@@ -167,29 +167,36 @@ queries.get("/getPalavrasChave", async (req, res) => {
 
 queries.get("/getFinanciadores", async (req, res) => {
     var financiadores = [];
-    const query_geral = "SELECT DISTINCT IdProjeto_Servico, TipoProjeto_Servico FROM Financiamento_Projeto_PrestacaoServico";
+    const query_geral = "SELECT DISTINCT IdFinanciador, TipoFinanciador FROM Financiador";
     var sqlRequest = new sql.Request();
     const result_geral = await sqlRequest.query(query_geral);
     for (i=0; i<result_geral.recordset.length; i++) {
-        if (result_geral.recordset[i].TipoProjeto_Servico == "Instituicao") {
+        if (result_geral.recordset[i].TipoFinanciador == "Instituicao") {
             const query_inst = "SELECT DISTINCT IdInstituicao, NomeInstituicao, NacionalidadeInstituicao FROM Instituicao WHERE IdInstituicao = @IdInstituicao";
-            sqlRequest.input('IdInstituicao', sql.Int, result_geral.recordset[i].IdProjeto_Prestacao);
             sqlRequest = new sql.Request();
+            sqlRequest.input('IdInstituicao', sql.Int, result_geral.recordset[i].IdFinanciador);
             const result_inst = await sqlRequest.query(query_inst);
             for (i=0; i<result_inst.recordset.length; i++) {
-                financiadores.append({ IdFinanciador: result_inst.recordset[i].IdInstituicao, NomeFinanciador: "Instituição: "+result_inst.recordset[i].NomeInstituicao+" | Nacionalidade: "+result_inst.recordset[i].NacionalidadeInstituicao, Tipo: "Instituicao"})
+                financiadores.push({ IdFinanciador: result_inst.recordset[i].IdInstituicao, NomeFinanciador: "Instituição: "+result_inst.recordset[i].NomeInstituicao+" | Nacionalidade: "+result_inst.recordset[i].NacionalidadeInstituicao, Tipo: "Instituicao"})
             }
-        } else if (result_geral.recordset[i].TipoProjeto_Servico == "Programa") {
+        } else if (result_geral.recordset[i].TipoFinanciador == "Programa") {
             const query_prog = "SELECT DISTINCT IdPrograma, NomePrograma, NacionalidadePrograma FROM Programa WHERE IdPrograma = @IdPrograma";
-            sqlRequest.input('IdPrograma', sql.Int, result_geral.recordset[i].IdProjeto_Prestacao);
             sqlRequest = new sql.Request();
+            sqlRequest.input('IdPrograma', sql.Int, result_geral.recordset[i].IdFinanciador);
             const result_prog = await sqlRequest.query(query_prog);
             for (i=0; i<result_prog.recordset.length; i++) {
-                financiadores.append({ IdFinanciador: result_prog.recordset[i].IdPrograma, NomeFinanciador: "Programa: "+result_prog.recordset[i].NomePrograma+" | Nacionalidade: "+result_prog.recordset[i].NacionalidadePrograma, Tipo: "Programa"})
+                financiadores.push({ IdFinanciador: result_prog.recordset[i].IdPrograma, NomeFinanciador: "Programa: "+result_prog.recordset[i].NomePrograma+" | Nacionalidade: "+result_prog.recordset[i].NacionalidadePrograma, Tipo: "Programa"})
             }
         }
     }
     res.status(200).send(financiadores);
+})
+
+queries.get("/getProjetos", async (req, res) => {
+    const query = "SELECT DISTINCT IdProjeto, NomeProjeto, Descricao, IdData, IdInstituicao, IdEstado, IdArea, IdDominio FROM Projeto";
+    const sqlRequest = new sql.Request();
+    const result = await sqlRequest.query(query);
+    res.status(200).send(result.recordset);
 })
 
 module.exports = queries;

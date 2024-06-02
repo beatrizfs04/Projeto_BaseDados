@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>DIUBI | View</title>
         <link rel="stylesheet" href="styles">
@@ -24,58 +25,26 @@
                 <h2>Ver Dados</h2>
                 <hr><br>
                 <div class="escolha">
-                    <button id="projeto" type="button">Projeto</button>
+                    <button id="projeto" type="button">Estado do Projeto</button>
                     <button id="serviço" type="button">Prestação de Serviço</button>
                 </div>
                 <div class="escolhaProjeto">
                     <h3>Escolha um Projeto.</h3>
 
                     <form>
-                        <h2>Projeto</h2>
+                        <h3>Ver o Estado de Um Projeto</h3>
                         <!-- 
                             DUVIDA: 
                             Apresenta-se pelo Id e pelo Nome?
                         -->
                         Projeto: <!--(NomeProjeto)--> 
-                        <select name="Projeto" id="projeto">
-                            <option value=""></option> 
+                        <select name="Projeto" id="projetoSelect">
+                            <option value="">Selecione Um Projeto</option> 
                             <!-- Buscar valores à base de dados -->
                         </select><br>
+                        <br>
+                        <span style="display: flex;"><h3>Estado do Projeto: </h3>&nbsp;<h3 style="font-weight: 300;" id="estadoProjeto">N/A</h3></span>
                     </form>
-
-                    <div class="container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>IdProjeto</th>
-                                    <th>NomeProjeto</th>
-                                    <th>Descricao</th>
-                                    <th>IdData</th>
-                                    <th>IdInstituicao</th>
-                                    <th>IdEstado</th>
-                                    <th>IdArea</th>
-                                    <th>IdDominio</th>
-                                    <th>IdFinanciamento</th>
-                                    <th>IdEquipaResponsavel</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Os dados têm que, através do script, ser inseridos aqui -->
-                                <tr>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
     
                 <!--Prestação de Serviço-->
@@ -129,6 +98,68 @@
                 </div>
             </section>
         </main>
+        <script>
+            async function fetchProjects() {
+                try {
+                  const response = await fetch('/api/getProjetos');
+                  if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                  }
+                  const projects = await response.json();
+                  $('#projetoSelect').empty();
+                  const dropdown = document.getElementById('projetoSelect');
+                  const option = document.createElement('option');
+                  option.value = "";
+                  option.text = `Selecione Um Investigador Responsável`;
+                  dropdown.appendChild(option);
+                  projects.forEach(project => {
+                    const option = document.createElement('option');
+                    option.value = project.IdProjeto;
+                    option.text = project.NomeProjeto;
+                    dropdown.add(option);
+                  });
+                } catch (error) {
+                  console.error('Failed to fetch projects:', error);
+                }
+            }
+
+            async function fetchEverything() {
+                fetchProjects();
+            }
+
+            async function onProjectSelection(event) {
+                if (event.target.value === "") { document.getElementById('estadoProjeto').textContent = "N/A"; return; }
+                const IdProjeto = event.target.value;
+                const response = await fetch(`/api/estado_projeto/${IdProjeto}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                var estadoProjeto = await response.json();
+                document.getElementById('estadoProjeto').textContent = estadoProjeto[0].NomeEstado;
+            }
+
+            const projetoBtn = document.getElementById('projeto');
+            const serviçoBtn = document.getElementById('serviço');
+            const escolhaProjetoDiv = document.querySelector('.escolhaProjeto');
+            const escolhaServiçoDiv = document.querySelector('.escolhaServiço');
+
+            projetoBtn.addEventListener('click', () => {
+                escolhaProjetoDiv.style.display = 'block';
+                escolhaServiçoDiv.style.display = 'none';
+                fetchEverything();
+            });
+
+            serviçoBtn.addEventListener('click', () => {
+                escolhaServiçoDiv.style.display = 'block';
+                escolhaProjetoDiv.style.display = 'none';
+                fetchEverything();
+            });
+
+            var projeto = document.getElementById('projetoSelect');
+            projeto.addEventListener('change', onProjectSelection);
+
+            window.onload = fetchEverything;
+        </script>
         <script src="mudar_divs"></script>
     </body>
     <script src="index.js"></script>
