@@ -1,8 +1,8 @@
 ----não usar esse insert value para pessoa
-INSERT INTO Pessoa (IdPessoa, PrimeiroNome, UltimoNome, Email, Telefone) VALUES
-(1, 'João', 'Silva', 'joao.silva@example.com', '123456789'),
-(2, 'Maria', 'Oliveira', 'maria.oliveira@example.com', '987654321');
-(3, 'Rafael', 'Santos', 'rafael.santos@gmail.com', '145236897');
+--INSERT INTO Pessoa (IdPessoa, PrimeiroNome, UltimoNome, Email, Telefone) VALUES
+--(1, 'João', 'Silva', 'joao.silva@example.com', '123456789'),
+--(2, 'Maria', 'Oliveira', 'maria.oliveira@example.com', '987654321');
+--(3, 'Rafael', 'Santos', 'rafael.santos@gmail.com', '145236897');
 
 ----usar esses comandos para inserir (temporariamente a ser adaptado na interface)
 EXEC InserirPessoa 'João', 'Silva', 'joao.silva@example.com', '123456789', 'Interno';
@@ -80,10 +80,10 @@ INSERT INTO Projeto (IdProjeto, NomeProjeto, Descricao, IdData, IdInstituicao, I
 --(2, 2000.00, 'Competitivo', 'Externo', 1, 'Programa', 2, 'Projeto'),
 --(3, 200.00, 'Competitivo', 'Externo', 1, 'Programa', 2, 'Projeto');
 
-INSERT INTO Financiamento (IdFinanciamento, Valor, TipoFinanciamento, OrigemFinanciamento, IdFinanciador, TipoFinanciador) VALUES
-(1, 1000.00, 'Não Competitivo', 'Interno', 1, 'Instituicao'),
-(2, 2000.00, 'Competitivo', 'Externo', 1, 'Programa'),
-(3, 200.00, 'Competitivo', 'Externo', 1, 'Programa');
+--INSERT INTO Financiamento (IdFinanciamento, Valor, TipoFinanciamento, OrigemFinanciamento, IdFinanciador, TipoFinanciador) VALUES
+--(1, 1000.00, 'Não Competitivo', 'Interno', 1, 'Instituicao'),
+--(2, 2000.00, 'Competitivo', 'Externo', 1, 'Programa'),
+--(3, 200.00, 'Competitivo', 'Externo', 1, 'Programa');
 
 EXEC InserirFinanciamento 
     @Valor = 5000.00, 

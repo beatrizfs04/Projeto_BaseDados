@@ -130,7 +130,7 @@ CREATE TABLE Instituicao_Membro
 
 CREATE TABLE Financiamento
 (
-  IdFinanciamento INT NOT NULL,
+  IdFinanciamento INT IDENTITY(1,1)NOT NULL,
   Valor DECIMAL(15, 2) NOT NULL,
   TipoFinanciamento VARCHAR(250) NOT NULL,
   OrigemFinanciamento VARCHAR(250) NOT NULL,

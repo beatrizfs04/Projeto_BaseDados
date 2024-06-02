@@ -370,7 +370,7 @@ BEGIN
         VALUES (1, @IdInterno, @IdProjeto) -- 1 representa a posição de líder
     END
 END
-
+--------NOVO TRIGGER
 CREATE TRIGGER TRG_DeleteProjectIntern
 ON Projeto
 AFTER DELETE
