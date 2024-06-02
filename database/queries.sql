@@ -21,7 +21,7 @@ FROM
 INNER JOIN 
     Projeto p ON p.IdProjeto = ps.IdProjeto_Servico
 WHERE 
-    ps.IdProjeto_Servico = [SEU_ID_PROJETO_SERVICO] 
+    ps.IdProjeto_Servico = [ID DO PROJETO] 
     AND ps.TipoProjeto_Servico = 'Projeto';
 
 ---------------busca um id prestacaoservico e nome por um idprojeto_servico + tipoprojeto_servico
@@ -29,12 +29,28 @@ WHERE
 SELECT 
     ps.IdProjeto_Servico, 
     ps.TipoProjeto_Servico,
+    ps
     CONCAT(ps.IdProjeto_Servico, ' - ', ps.TipoProjeto_Servico) AS ServicoNome
 FROM 
     Projeto_Servico ps
 WHERE 
     ps.IdProjeto_Servico = [SEU_ID_PROJETO_SERVICO] 
     AND ps.TipoProjeto_Servico = 'PrestacaoServico';
+
+---------------busca um id prestacaoservico e nome por um idfinanciador + tipofinanciador
+SELECT 
+    F.IdFinanciador, 
+    F.TipoFinanciador,
+    P.IdPrograma,
+    CONCAT(P.IdPrograma, ' - ', P.NomePrograma) AS ProgramaNome
+FROM 
+    Financiador F
+INNER JOIN 
+    Programa P ON P.IdPrograma = F.IdFinanciador
+WHERE 
+    F.IdFinanciador = [ID DO PROGRAMA] 
+    AND F.TipoFinanciador = 'Programa';
+
 
 ---------------porcentagem de trabalho de cada membro em proejtos
 SELECT 

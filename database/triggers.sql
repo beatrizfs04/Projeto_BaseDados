@@ -125,6 +125,26 @@ END
 GO
 
 ---delete part!
+CREATE TRIGGER delete_financiador_on_programa_delete
+ON Programa
+AFTER DELETE
+AS
+BEGIN
+    -- Exclui o registro correspondente na tabela Financiador
+    DELETE FROM Financiador WHERE IdFinanciador IN (SELECT IdPrograma FROM deleted);
+END
+GO
+
+CREATE TRIGGER delete_financiador_on_instituicao_delete
+ON Instituicao
+AFTER DELETE
+AS
+BEGIN
+    -- Exclui o registro correspondente na tabela Financiador
+    DELETE FROM Financiador WHERE IdFinanciador IN (SELECT IdInstituicao FROM deleted);
+END
+GO
+
 
 
 --------------Projeto e Prestacao Servico-----------------------------------
@@ -350,6 +370,21 @@ BEGIN
         VALUES (1, @IdInterno, @IdProjeto) -- 1 representa a posição de líder
     END
 END
+
+CREATE TRIGGER TRG_DeleteProjectIntern
+ON Projeto
+AFTER DELETE
+AS
+BEGIN
+    DECLARE @IdProjeto INT
+
+    -- Obter o IdProjeto do registro excluído na tabela Projeto
+    SELECT @IdProjeto = IdProjeto FROM deleted
+
+    -- Excluir o interno da tabela PosicaoInterno relacionado ao projeto excluído
+    DELETE FROM PosicaoInterno WHERE IdProjeto = @IdProjeto
+END
+
 
 -- Gatilho para garantir que uma equipe esteja associada apenas a um projeto
 CREATE TRIGGER TRG_CheckTeamProjectAssociation

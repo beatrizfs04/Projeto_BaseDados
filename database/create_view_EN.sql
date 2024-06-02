@@ -1,5 +1,5 @@
 USE DIUBI;
-GO 
+GO
 
 CREATE View Person AS 
 SELECT 
@@ -28,10 +28,19 @@ FROM
     Externo;
 GO
 
-CREATE View ProjectorService AS 
+CREATE View Member AS 
 SELECT 
-    IdProjeto_Servico as ProjectOrServiceID, 
-    TipoProjeto_Servico  as ProjectOrServiceType
+    IdMembro as MemberId, 
+    IdPessoa as PersonId,
+    TipoMembro as MemberType
+FROM
+    Membro;
+GO
+
+CREATE View Project_Service AS 
+SELECT 
+    IdProjeto_Servico as Project_ServiceID, 
+    TipoProjeto_Servico  as Project_ServiceType
 FROM
     Projeto_Servico;
 GO
@@ -56,6 +65,7 @@ GO
 CREATE View Program AS 
 SELECT 
     IdPrograma as ProgramId, 
+    NacionalidadePrograma as ProgramNationality,
     NomePrograma as ProgramName 
 FROM
     Programa;
@@ -110,16 +120,6 @@ FROM
     Financiador;
 GO
 
-
-CREATE View Member AS 
-SELECT 
-    IdMembro as MemberID, 
-    IdPessoa as PersonId,
-    TipoMembro as MemberType 
-FROM
-    Membro;
-GO
-
 CREATE View OrcidInfo AS 
 SELECT 
     IdOrcid as OrcidID, 
@@ -142,22 +142,9 @@ SELECT
     Valor as Amount, 
     TipoFinanciamento as FundingType, 
     OrigemFinanciamento as FundingSource, 
-    TipoFinanciador as FunderType, 
-    IdProjeto_Servico as ProjectOrServiceID
+    TipoFinanciador as FunderType
 FROM
     Financiamento;
-GO
-
-CREATE View EligibleCost AS 
-SELECT 
-    IdCustoElegivel as EligibleCostID, 
-    IdEquipa as TeamID, 
-    IdProjeto as ProjectID, 
-    CustoEquipa as TeamCost, 
-    CustoProjeto as ProjectCost, 
-    IdFinanciamento as FundingID
-FROM
-    CustoElegivel;
 GO
 
 CREATE View Project AS 
@@ -170,27 +157,45 @@ SELECT
     IdEstado as StateID, 
     IdArea as AreaID, 
     IdDominio as DomainID, 
-    IdMembro as MemberID 
+    IdInterno as MemberID 
 FROM
     Projeto;
-GO
-
-CREATE View KeywordAssignment AS 
-SELECT 
-    IdAssociacao as AssignmentID, 
-    IdProjeto as ProjectID, 
-    IdPalavraChave as KeywordID
-FROM
-    AssociarPalavraChave;
 GO
 
 CREATE View Team AS 
 SELECT 
     IdEquipa as TeamID, 
-    IdMembro as MemberID, 
     IdProjeto as ProjectID 
 FROM
     Equipa;
+GO
+
+CREATE View TeamMember AS 
+SELECT 
+    IdEquipa as TeamID, 
+    IdMembro as MemberID 
+FROM
+    Equipa_Membro;
+GO
+
+CREATE View EligibleCostTeam AS 
+SELECT 
+    IdCustoElegivelEquipa as EligibleCostTeamID, 
+    IdEquipa as TeamID, 
+    CustoEquipa as TeamCost, 
+    IdFinanciamento as FundingID
+FROM
+    CustoElegivelEquipa;
+GO
+
+CREATE View EligibleCostProject AS 
+SELECT 
+    IdCustoElegivelProjeto as EligibleCostProjectID, 
+    IdProjeto as ProjectID, 
+    CustoProjeto as ProjectCost, 
+    IdFinanciamento as FundingID
+FROM
+    CustoElegivelProjeto;
 GO
 
 CREATE View ServiceProvision AS 
@@ -200,10 +205,27 @@ SELECT
     Descricao as Description, 
     IdInterno as InternalId, 
     IdData as DateID, 
-    IdEstado as StateID, 
-    IdFinanciamento as FundingID
+    IdEstado as StateID
 FROM
     PrestacaoServico;
+GO
+
+CREATE View Financing_Project_Service AS 
+SELECT 
+    IdFinanciamento as FinancingID, 
+    IdProjeto_Servico as ProjectOrServiceID, 
+    TipoProjeto_Servico as ProjectOrServiceType
+FROM
+    Financiamento_Projeto_PrestacaoServico;
+GO
+
+CREATE View KeywordAssignment AS 
+SELECT 
+    IdAssociacao as AssignmentID, 
+    IdProjeto as ProjectID, 
+    IdPalavraChave as KeywordID
+FROM
+    AssociarPalavraChave;
 GO
 
 CREATE View Activity AS 
@@ -217,15 +239,6 @@ FROM
     Atividade;
 GO
 
-CREATE View InternalMemberPosition AS 
-SELECT 
-    IdPosicao as PositionID, 
-    IdInterno as InternalId, 
-    IdProjeto as ProjectID
-FROM
-    PosicaoInterno;
-GO
-
 CREATE View ActivityTime AS 
 SELECT 
     IdMembro as MemberID, 
@@ -233,6 +246,15 @@ SELECT
     IdAtividade as ActivityID
 FROM
     TempoAtividade;
+GO
+
+CREATE View InternalMemberPosition AS 
+SELECT 
+    IdPosicao as PositionID, 
+    IdInterno as InternalId, 
+    IdProjeto as ProjectID
+FROM
+    PosicaoInterno;
 GO
 
 CREATE View Publication AS 
@@ -245,7 +267,3 @@ SELECT
 FROM
     Publicacao;
 GO
-
-
-
-

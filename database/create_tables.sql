@@ -1,5 +1,4 @@
 USE DIUBI;
---------------procedure pessoa-----------------
 
 CREATE TABLE Pessoa
 (
@@ -36,8 +35,7 @@ CREATE TABLE Membro
   FOREIGN KEY (IdPessoa) REFERENCES Pessoa(IdPessoa)
 );
 
----------------------------------------------------------------
----------problema1--------------RESOLVIDO
+
 CREATE TABLE Projeto_Servico
 (
   IdProjeto_Servico INT NOT NULL,
@@ -73,7 +71,7 @@ CREATE TABLE Instituicao
 (
   IdInstituicao INT NOT NULL,
   NomeInstituicao VARCHAR(250) NOT NULL,
-  NacionalidadeInstituicao VARCHAR(250) NOT NULL,
+  NacionalidadeInstituicao: VARCHAR(250) NOT NULL,
   PRIMARY KEY (IdInstituicao)
 );
 
@@ -119,8 +117,7 @@ CREATE TABLE Orcid
   PRIMARY KEY (IdOrcid),
   FOREIGN KEY (IdMembro) REFERENCES Membro(IdMembro)
 );
----------------membros internos devem ser orbigatóriamente da UBI---------
------e membros externos não podem ser!!
+
 CREATE TABLE Instituicao_Membro
 (
   IdMembro INT NOT NULL,
@@ -130,7 +127,7 @@ CREATE TABLE Instituicao_Membro
   FOREIGN KEY (IdInstituicao) REFERENCES Instituicao(IdInstituicao)
 );
 
----------problema2
+
 CREATE TABLE Financiamento
 (
   IdFinanciamento INT NOT NULL,
@@ -139,13 +136,10 @@ CREATE TABLE Financiamento
   OrigemFinanciamento VARCHAR(250) NOT NULL,
   IdFinanciador INT NOT NULL,
   TipoFinanciador VARCHAR(50) NOT NULL, 
-  TipoProjeto_Servico VARCHAR(50) NOT NULL, 
   PRIMARY KEY (IdFinanciamento),
   FOREIGN KEY (IdFinanciador, TipoFinanciador) REFERENCES Financiador(IdFinanciador, TipoFinanciador)
 );
 
-
-----------problema3---alterar IdMembro para Id Interno
 
 CREATE TABLE Projeto
 (
@@ -168,7 +162,6 @@ CREATE TABLE Projeto
 );
 
 
-------------problema4
 CREATE TABLE Equipa
 (
   IdEquipa INT NOT NULL,
@@ -185,7 +178,6 @@ CREATE TABLE Equipa_Membro
   FOREIGN KEY (IdMembro) REFERENCES Membro(IdMembro)
 );
 
---------------problema5
 CREATE TABLE CustoElegivelEquipa
 (
   IdCustoElegivelEquipa INT NOT NULL,
@@ -244,7 +236,6 @@ CREATE TABLE AssociarPalavraChave
   FOREIGN KEY (IdPalavraChave) REFERENCES PalavraChave(IdPalavraChave)
 );
 
-------------------atividade
 CREATE TABLE Atividade
 (
   IdAtividade INT NOT NULL,
