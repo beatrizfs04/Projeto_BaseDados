@@ -24,77 +24,128 @@
             <section>
                 <h2>Ver Dados</h2>
                 <hr><br>
-                <div class="escolha">
-                    <button id="projeto" type="button">Estado do Projeto</button>
-                    <button id="serviço" type="button">Prestação de Serviço</button>
-                </div>
                 <div class="escolhaProjeto">
-                    <h3>Escolha um Projeto.</h3>
-
                     <form>
                         <h3>Ver o Estado de Um Projeto</h3>
-                        <!-- 
-                            DUVIDA: 
-                            Apresenta-se pelo Id e pelo Nome?
-                        -->
-                        Projeto: <!--(NomeProjeto)--> 
+                        Projeto: <!--(IdProjeto e NomeProjeto)--> 
                         <select name="Projeto" id="projetoSelect">
                             <option value="">Selecione Um Projeto</option> 
                             <!-- Buscar valores à base de dados -->
                         </select><br>
                         <br>
-                        <span style="display: flex;"><h3>Estado do Projeto: </h3>&nbsp;<h3 style="font-weight: 300;" id="estadoProjeto">N/A</h3></span>
+                        <span style="display: flex;">Estado do Projeto: &nbsp;<a id="estadoProjeto">N/A</a></span>
                     </form>
-                </div>
-    
-                <!--Prestação de Serviço-->
-                <div class="escolhaServiço">
-                    <h3>Escolha uma Prestação de Serviço.</h3>
-    
+                    <br><br>
                     <form>
-                        <h2>Pretação de Serviço</h2>
-                        <!-- 
-                            DUVIDA: 
-                            Apresenta-se pelo Id e pelo Nome?
-                        -->
-                        Prestação de Serviço: <!--(NomeServiço)--> 
-                        <select name="Serviço" id="serviço">
-                            <option value=""></option> 
-                            <!-- Buscar valores à base de dados -->
-                        </select><br>
+                        <h3>Valor de Financiamento de Projetos</h3>
+                        <div class="container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>IdProjeto</th>
+                                        <th>NomeProjeto</th>
+                                        <th>Valor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </form>
-
-                    <div class="container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>IdPServico</th>
-                                    <th>NomeServico</th>
-                                    <th>Descricao</th>
-                                    <th>IdData</th>
-                                    <th>IdEstado</th>
-                                    <th>IdArea</th>
-                                    <th>IdDominio</th>
-                                    <th>IdFinanciamento</th>
-                                    <th>IdMembroResponsavel</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Os dados têm que, através do script, ser inseridos aqui -->
-                                <tr>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <br><br>
+                    <form>
+                        <h3>Quantidade de Membros nos Projetos</h3>
+                        <div class="container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>IdProjeto</th>
+                                        <th>NomeProjeto</th>
+                                        <th>QuantMembros</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                    <br><br>
+                    <form>
+                        <h3>Quantidade de Financiamentos dos Projetos</h3>
+                        <div class="container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>IdProjeto</th>
+                                        <th>NomeProjeto</th>
+                                        <th>QuantFinanciamentos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                    <br><br>
+                    <form>
+                        <h3>Quantidade de Publicações dos Projetos</h3>
+                        <div class="container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>IdProjeto</th>
+                                        <th>NomeProjeto</th>
+                                        <th>QuantPublicacoes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                    <br><br>
+                    <form>
+                        <h3>Quantidade de Financiamentos das Instituições </h3>
+                        <div class="container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>IdInstituicao</th>
+                                        <th>NomeInstituicao</th>
+                                        <th>QuantFinanciamentos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                    
                 </div>
             </section>
         </main>
@@ -137,23 +188,6 @@
                 var estadoProjeto = await response.json();
                 document.getElementById('estadoProjeto').textContent = estadoProjeto[0].NomeEstado;
             }
-
-            const projetoBtn = document.getElementById('projeto');
-            const serviçoBtn = document.getElementById('serviço');
-            const escolhaProjetoDiv = document.querySelector('.escolhaProjeto');
-            const escolhaServiçoDiv = document.querySelector('.escolhaServiço');
-
-            projetoBtn.addEventListener('click', () => {
-                escolhaProjetoDiv.style.display = 'block';
-                escolhaServiçoDiv.style.display = 'none';
-                fetchEverything();
-            });
-
-            serviçoBtn.addEventListener('click', () => {
-                escolhaServiçoDiv.style.display = 'block';
-                escolhaProjetoDiv.style.display = 'none';
-                fetchEverything();
-            });
 
             var projeto = document.getElementById('projetoSelect');
             projeto.addEventListener('change', onProjectSelection);
