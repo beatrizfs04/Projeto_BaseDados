@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>DIUBI | Create</title>
         <link rel="stylesheet" href="styles">
@@ -67,25 +68,25 @@
 
                     Área Científica: <!--(IdArea)--> 
                     <select name="AreaCientifica" id="area">
-                        <option value=""></option> 
+                        <option value="">Selecione Uma Área Ciêntifica</option> 
                         <!-- Buscar valores à base de dados -->
                     </select><br>
 
                     Domínio Científico: <!--(IdDominio)--> 
                     <select name="DominioCientifica" id="dominio">
-                        <option value=""></option> 
+                        <option value="">Selecione Um Domínio Ciêntifico</option> 
                         <!-- Buscar valores à base de dados -->
                     </select><br>
 
                     Investigador Responsável: <!--(IdMembro)--> 
                     <select name="Investigador" id="investigador">
-                        <option value=""></option> 
+                        <option value="">Selecione Um Investigador Responsável</option> 
                         <!-- Buscar valores à base de dados -->
                     </select><br>
 
                     Palavras Chaves Associadas: <!--(Tabela AssociarPalavraChave)--> 
                     <select name="PalavrasChaves" id="chaves">
-                        <option value=""></option> 
+                        <option value="">Selecione Uma Palavra-Chave</option> 
                         <!-- Buscar valores à base de dados -->
                     </select><br>
 
@@ -167,15 +168,15 @@
                         <option value="aprovado">aprovado</option>
                         <option value="cancelado">cancelado</option>
                         <option value="concluído">concluído</option>
-                        <option value="em curso">em curso</option>
+                        <option value="em_curso">em curso</option>
                         <option value="encerrado">encerrado</option>
                         <option value="renovado">renovado</option>
-                        <option value="em submissão">em submissão</option>
+                        <option value="em_submissao">em submissão</option>
                     </select><br> 
 
                     Identificador do Interno Responsável: <!--(IdInterno)--> 
-                    <select name="Responsável" id="responsável">
-                        <option value=""></option>
+                    <select name="Responsável" id="responsavel_serv">
+                        <option value="">Selecione Um Responsável</option>
                         <!-- Buscar valores à base de dados -->
                     </select>
                     
@@ -184,27 +185,27 @@
 
                     Área Científica: <!--(IdArea)--> 
                     <!-- Qual era mesmo a diferença entre o dominio cientifico e a area? -->
-                    <select name="AreaCientifica" id="area">
-                        <option value=""></option>
+                    <select name="AreaCientifica" id="area_serv">
+                        <option value="">Selecione Uma Área Ciêntifica</option>
                         <!-- Buscar valores à base de dados -->
                     </select><br>
 
                     Domínio Científico: <!--(IdDominio)--> 
                     <!-- Qual era mesmo a diferença entre o dominio cientifico e a area? -->
-                    <select name="DominioCientifico" id="dominio">
-                        <option value=""></option>
+                    <select name="DominioCientifico" id="dominio_serv">
+                        <option value="">Selecione Um Domínio Ciêntifico</option>
                         <!-- Buscar valores à base de dados -->
                     </select><br>
 
                     Investigador Responsável: <!--(IdMembro)--> 
-                    <select name="Investigador" id="investigador">
-                        <option value=""></option> 
+                    <select name="Investigador" id="investigador_serv">
+                        <option value="">Selecione Um Investigador Responsável</option> 
                         <!-- Buscar valores à base de dados -->
                     </select><br>
 
                     Palavras Chaves Associadas: <!--(Tabela AssociarPalavraChave)--> 
-                    <select name="PalavrasChaves" id="chaves">
-                        <option value=""></option> 
+                    <select name="PalavrasChaves" id="chaves_serv">
+                        <option value="">Selecione Uma Palvra-Chave</option> 
                         <!-- Buscar valores à base de dados -->
                     </select>
 
@@ -218,8 +219,8 @@
                     -->
 
                     Financiador: <!--(IdFinanciador)-->
-                    <select name="Financiador" id="financiador">
-                        <option value=""></option> 
+                    <select name="Financiador" id="financiador_sv">
+                        <option value="">Selecione Um Financiador</option> 
                         <!-- Buscar valores á base de dados -->
                     </select><br>
 
@@ -242,64 +243,229 @@
         </main>
 
         <script>
+            async function fetchCientificArea() {
+                try {
+                  const response = await fetch('/api/getAreas');
+                  if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                  }
+                  const areas = await response.json();
+                  $('#area').empty();
+                  $('#area_serv').empty();
+                  const dropdown = document.getElementById('area');
+                  const dropdown_sv = document.getElementById('area_serv');
+                  const option = document.createElement('option');
+                  option.value = null;
+                  option.text = `Selecione Uma Área Ciêntifica`;
+                  dropdown.appendChild(option);
+                  const option_serv = document.createElement('option');
+                  option_serv.value = null;
+                  option_serv.text = `Selecione Uma Área Ciêntifica`;
+                  dropdown_sv.appendChild(option_serv);
+                  areas.forEach(area => {
+                    const option = document.createElement('option');
+                    option.value = area.IdPessoa;
+                    option.text = `${area.IdArea} - ${area.NomeArea}`;
+                    dropdown.add(option);
+                    const option_serv = document.createElement('option');
+                    option_serv.value = area.IdPessoa;
+                    option_serv.text = `${area.IdArea} - ${area.NomeArea}`;
+                    dropdown_sv.add(option_serv);
+                  });
+                } catch (error) {
+                  console.error('Failed to fetch projects:', error);
+                }
+            }
+
+            async function fetchCientificDomain() {
+                try {
+                  const response = await fetch('/api/getDominios');
+                  if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                  }
+                  const dominios = await response.json();
+                  $('#dominio').empty();
+                  $('#dominio_serv').empty();
+                  const dropdown = document.getElementById('dominio');
+                  const dropdown_sv = document.getElementById('dominio_serv');
+                  const option = document.createElement('option');
+                  option.value = null;
+                  option.text = `Selecione Um Domínio Ciêntifico`;
+                  dropdown.appendChild(option);
+                  const option_serv = document.createElement('option');
+                  option_serv.value = null;
+                  option_serv.text = `Selecione Um Domínio Ciêntifico`;
+                  dropdown_sv.appendChild(option_serv);
+                  dominios.forEach(dominio => {
+                    const option = document.createElement('option');
+                    option.value = dominio.IdDominio;
+                    option.text = `${dominio.IdDominio} - ${dominio.NomeDominio}`;
+                    dropdown.add(option);
+                    const option_serv = document.createElement('option');
+                    option_serv.value = dominio.IdDominio;
+                    option_serv.text = `${dominio.IdDominio} - ${dominio.NomeDominio}`;
+                    dropdown_sv.add(option_serv);
+                  });
+                } catch (error) {
+                  console.error('Failed to fetch projects:', error);
+                }
+            }
+
+            async function fetchPasscodes() {
+                try {
+                  const response = await fetch('/api/getPalavrasChave');
+                  if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                  }
+                  const chaves = await response.json();
+                  $('#chaves').empty();
+                  $('#chaves_serv').empty();
+                  const dropdown = document.getElementById('chaves');
+                  const dropdown_sv = document.getElementById('chaves_serv');
+                  const option = document.createElement('option');
+                  option.value = null;
+                  option.text = `Selecione Uma Palavra-Chave`;
+                  dropdown.appendChild(option);
+                  const option_serv = document.createElement('option');
+                  option_serv.value = null;
+                  option_serv.text = `Selecione Uma Palavra-Chave`;
+                  dropdown_sv.appendChild(option_serv);
+                  chaves.forEach(chave => {
+                    const option = document.createElement('option');
+                    option.value = chave.IdPalavraChave;
+                    option.text = `${chave.PalavraChave}`;
+                    dropdown.add(option);
+                    const option_serv = document.createElement('option');
+                    option_serv.value = chave.IdPalavraChave;
+                    option_serv.text = `${chave.PalavraChave}`;
+                    dropdown_sv.add(option_serv);
+                  });
+                } catch (error) {
+                  console.error('Failed to fetch projects:', error);
+                }
+            }
+
+            async function fetchFinantials() {
+                try {
+                  const response = await fetch('/api/getFinanciadores');
+                  if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                  }
+                  const finantials = await response.json();
+                  $('#financiador').empty();
+                  $('#financiador_sv').empty();
+                  const dropdown = document.getElementById('financiador');
+                  const dropdown_sv = document.getElementById('financiador_sv');
+                  const option = document.createElement('option');
+                  option.value = null;
+                  option.text = `Selecione Um Financiador`;
+                  dropdown.appendChild(option);
+                  const option_serv = document.createElement('option');
+                  option_serv.value = null;
+                  option_serv.text = `Selecione Um Financiador`;
+                  dropdown_sv.appendChild(option_serv);
+                  finantials.forEach(finantial => {
+                    const option = document.createElement('option');
+                    option.value = finantial.Tipo+"_"+finantial.IdFinanciador;
+                    option.text = `${finantial.NomeFinanciador}`;
+                    dropdown.add(option);
+                    const option_serv = document.createElement('option');
+                    option_serv.value = finantial.Tipo+"_"+finantial.IdFinanciador;
+                    option_serv.text = `${finantial.NomeFinanciador}`;
+                    dropdown_sv.add(option_serv);
+                  });
+                } catch (error) {
+                  console.error('Failed to fetch projects:', error);
+                }
+            }
 
             // Procurar Membros assuciados a projeto <- Está mal tem que se procurar membros na tabela Membros só.
-            async function fetchProjects() {
+            async function fetchEverything() {
+                fetchCientificArea();
+                fetchCientificDomain();
+                fetchPasscodes();
+                fetchFinantials();
                 try {
                   const response = await fetch('/api/getInvestigadores');
                   if (!response.ok) {
                     throw new Error('Network response was not ok');
                   }
                   const projects = await response.json();
+                  $('#investigador').empty();
+                  $('#investigador_serv').empty();
                   const dropdown = document.getElementById('investigador');
+                  const dropdown_sv = document.getElementById('investigador_serv');
+                  const option = document.createElement('option');
+                  option.value = null;
+                  option.text = `Selecione Um Investigador Responsável`;
+                  dropdown.appendChild(option);
+                  const option_serv = document.createElement('option');
+                  option_serv.value = null;
+                  option_serv.text = `Selecione Um Investigador Responsável`;
+                  dropdown_sv.appendChild(option_serv);
                   projects.forEach(project => {
                     const option = document.createElement('option');
                     option.value = project.IdPessoa;
                     option.text = `${project.IdPessoa} - ${project.PrimeiroNome} ${project.UltimoNome}`;
                     dropdown.add(option);
+                    const option_serv = document.createElement('option');
+                    option_serv.value = project.IdPessoa;
+                    option_serv.text = `${project.IdPessoa} - ${project.PrimeiroNome} ${project.UltimoNome}`;
+                    dropdown_sv.add(option_serv);
                   });
                 } catch (error) {
                   console.error('Failed to fetch projects:', error);
                 }
             }
-            
-            window.onload = fetchProjects;
 
             // adicionar campos
-            function adicionarCampos() {
+            async function adicionarCampos() {
+                const response = await fetch('/api/getMembros');
+                if (!response.ok) {
+                throw new Error('Network response was not ok');
+                }
+                const members = await response.json();
+                $('#membrosContainer').empty();
                 const numeroDeMembros = document.getElementById('numMembros').value;
                 const container = document.getElementById('membrosContainer');
                 container.innerHTML = '';
                 
                 for (let i = 0; i < numeroDeMembros; i++) {
                     const select = document.createElement('select');
-                    select.name = 'Membro';
-                    select.id = `membro${i}`;
-
-                    // Precisamos que procura membros na tabela Membros. 
-                    // É preciso tbm que guarde os membros na tabela Equipa.
-                    const option1 = document.createElement('option');
-                    option1.value = '';
-                    option1.textContent = '';
-                    
-                    const option2 = document.createElement('option');
-                    option2.value = '1';
-                    option2.textContent = 'Membro 1';
-                    
-                    const option3 = document.createElement('option');
-                    option3.value = '2';
-                    option3.textContent = 'Membro 2';
-                    
-                    select.appendChild(option1);
-                    select.appendChild(option2);
-                    select.appendChild(option3);
-                    
+                    const option = document.createElement('option');
+                    option.value = null;
+                    option.text = `Selecione Um Membro`;
+                    select.appendChild(option);
+                    members.forEach(member => {
+                        const option = document.createElement('option');
+                        option.value = member.IdMembro;
+                        option.text = `${member.IdMembro} - ${member.PrimeiroNome} ${member.UltimoNome}`;
+                        select.appendChild(option);
+                    });
                     container.appendChild(select);
                     container.appendChild(document.createElement('br'));
                 }
             }
+
+            const projetoBtn = document.getElementById('projeto');
+            const serviçoBtn = document.getElementById('serviço');
+            const escolhaProjetoDiv = document.querySelector('.escolhaProjeto');
+            const escolhaServiçoDiv = document.querySelector('.escolhaServiço');
+
+            projetoBtn.addEventListener('click', () => {
+                escolhaProjetoDiv.style.display = 'block';
+                escolhaServiçoDiv.style.display = 'none';
+                fetchEverything();
+            });
+
+            serviçoBtn.addEventListener('click', () => {
+                escolhaServiçoDiv.style.display = 'block';
+                escolhaProjetoDiv.style.display = 'none';
+                fetchEverything();
+            });
+
+            window.onload = fetchEverything;
         </script>
-        <script src="mudar_divs"></script>
     </body>
     <script src="index.js"></script>
 </html>
