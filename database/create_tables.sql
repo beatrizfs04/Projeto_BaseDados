@@ -64,7 +64,7 @@ CREATE TABLE Estado
 CREATE TABLE Programa
 (
   IdPrograma INT NOT NULL,
-  NacionalidadePrograma VARCHAR(250) NULL,
+  NacionalidadePrograma VARCHAR(250) NULL;
   NomePrograma VARCHAR(250) NOT NULL,
   PRIMARY KEY (IdPrograma)
 );
@@ -225,7 +225,7 @@ CREATE TABLE PrestacaoServico
 
 CREATE TABLE Financiamento_Projeto_PrestacaoServico
 (
-  IdFinanciamento INT IDENTITY(1,1) NOT NULL,
+  IdFinanciamento INT IDENTITY(1,1) NOT NULL;
   IdProjeto_Servico INT NOT NULL,
   TipoProjeto_Servico VARCHAR(50) NOT NULL,
   PRIMARY KEY (IdFinanciamento, IdProjeto_Servico),
