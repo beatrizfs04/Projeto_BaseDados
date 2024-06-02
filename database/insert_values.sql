@@ -37,9 +37,9 @@ INSERT INTO Estado (IdEstado, NomeEstado) VALUES
 (6, 'Renovado'),
 (7, 'Em submissão');
 
-INSERT INTO Programa (IdPrograma, NomePrograma) VALUES
-(1, 'Programa A'),
-(2, 'Programa B');
+INSERT INTO Programa (IdPrograma, NacionalidadePrograma, NomePrograma) VALUES
+(1,'Portugal', 'Programa A'),
+(2,'Espanha', 'Programa B');
 
 INSERT INTO Instituicao (IdInstituicao, NomeInstituicao, NacionalidadeInstituicao) VALUES
 (1, 'Universidade da Beira Interior', 'Portugal'),
@@ -72,25 +72,40 @@ INSERT INTO Financiador (IdFinanciador, TipoFinanciador) VALUES
 
 ----FALTA
 INSERT INTO Projeto (IdProjeto, NomeProjeto, Descricao, IdData, IdInstituicao, IdEstado, IdArea, IdDominio, IdInterno) VALUES
-(1, 'Projeto Alpha', 'Pesquisa sobre sustentabilidade', 1, 1, 1, 1, 1, 5),
-(2, 'Projeto Beta', 'Desenvolvimento de IA', 2, 2, 6, 2, 2, 6);
+(1, 'Projeto Alpha', 'Pesquisa sobre sustentabilidade', 1, 1, 1, 1, 1, 1),
+(2, 'Projeto Beta', 'Desenvolvimento de IA', 2, 2, 6, 2, 2, 2);
 
-INSERT INTO Financiamento (IdFinanciamento, Valor, TipoFinanciamento, OrigemFinanciamento, IdFinanciador, TipoFinanciador, IdProjeto_Servico, TipoProjeto_Servico) VALUES
-(1, 1000.00, 'Não Competitivo', 'Interno', 1, 'Instituicao', 1, 'Servico'),
-(2, 2000.00, 'Competitivo', 'Externo', 1, 'Programa', 2, 'Projeto'),
-(3, 200.00, 'Competitivo', 'Externo', 1, 'Programa', 2, 'Projeto');
+--INSERT INTO Financiamento (IdFinanciamento, Valor, TipoFinanciamento, OrigemFinanciamento, IdFinanciador, TipoFinanciador, IdProjeto_Servico, TipoProjeto_Servico) VALUES
+--(1, 1000.00, 'Não Competitivo', 'Interno', 1, 'Instituicao', 1, 'Servico'),
+--(2, 2000.00, 'Competitivo', 'Externo', 1, 'Programa', 2, 'Projeto'),
+--(3, 200.00, 'Competitivo', 'Externo', 1, 'Programa', 2, 'Projeto');
 
-INSERT INTO Equipa (IdEquipa, IdMembro, IdProjeto) VALUES
-(1, 1, 1),
-(1, 2, 1),
-(2, 2, 2);
+INSERT INTO Financiamento (IdFinanciamento, Valor, TipoFinanciamento, OrigemFinanciamento, IdFinanciador, TipoFinanciador) VALUES
+(1, 1000.00, 'Não Competitivo', 'Interno', 1, 'Instituicao'),
+(2, 2000.00, 'Competitivo', 'Externo', 1, 'Programa'),
+(3, 200.00, 'Competitivo', 'Externo', 1, 'Programa');
+
+EXEC InserirFinanciamento 
+    @Valor = 5000.00, 
+    @TipoFinanciamento = 'Competitivo', 
+    @OrigemFinanciamento = 'Externo', 
+    @IdFinanciador = 1, 
+    @TipoFinanciador = 'Instituicao', 
+    @IdProjeto_Servico = 1, 
+    @TipoProjeto_Servico = 'Projeto';
+
+INSERT INTO Equipa (IdEquipa, IdProjeto) VALUES
+(1, 1),
+
+INSERT INTO Equipa_Membro (IdEquipa, IdMembro) VALUES
+(1, 1)
 
 --uma função para garantir que o IdFinanciamento aqui presente precisa ter o tipo "Projeto" no Financiamento
-INSERT INTO CustoElegivelEquipa (IdCustoElegivel, IdEquipa, CustoEquipa, IdFinanciamento) VALUES
-(1, 1, 600.00, 1),
+INSERT INTO CustoElegivelEquipa (IdCustoElegivelEquipa, IdEquipa, CustoEquipa, IdFinanciamento) VALUES
+(1, 1, 600.00, 2),
 (2, 2, 1000.00, 2);
 
-INSERT INTO CustoElegivelProjeto (IdCustoElegivel, IdProjeto, CustoProjeto, IdFinanciamento) VALUES
+INSERT INTO CustoElegivelProjeto (IdCustoElegivelProjeto, IdProjeto, CustoProjeto, IdFinanciamento) VALUES
 (1, 1, 400.00, 1),
 (2, 2, 10000.00, 2);
 
@@ -98,7 +113,6 @@ INSERT INTO AssociarPalavraChave (IdAssociacao, IdProjeto, IdPalavraChave) VALUE
 (1, 1, 2),  
 (2, 2, 1);  
 
--- uma função para garantir que o IdFinanciamento aqui presente tenha o tipo como "servico"
 INSERT INTO PrestacaoServico (IdPrestacaoServico, NomePrestacaoServico, Descricao, IdInterno, IdData, IdEstado) VALUES
 (1, 'Consultoria Ambiental', 'Serviço de consultoria em práticas sustentáveis', 1, 1, 1),
 (2, 'Desenvolvimento de Software', 'Serviço de desenvolvimento de aplicações de IA', 2, 2, 2);

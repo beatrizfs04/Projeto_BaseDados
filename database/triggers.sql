@@ -18,7 +18,12 @@ on [table_name]
 
 --sendo também considerada para os membros da equipa de investigação a percentagem mínima de tempo de dedicação de 15%.
 
-----trigger inserir Tabela Pessoa, Membro, Interno, Externo---------------------
+-----------remover triggers-----------------------
+--DROP TRIGGER IF EXISTS after_interno_insert;
+--DROP TRIGGER IF EXISTS after_externo_insert;
+--GO
+
+----Trigger inserir Tabela Pessoa, Membro, Interno, Externo---------------------OK
 CREATE PROCEDURE InserirPessoa
 (
     @PrimeiroNome VARCHAR(250),
@@ -84,125 +89,61 @@ BEGIN
 END
 GO
 
------------remover triggers-----------------------
---DROP TRIGGER IF EXISTS after_interno_insert;
---DROP TRIGGER IF EXISTS after_externo_insert;
---GO
 
 --------------------------Trigger Financiador---------------
-CREATE TRIGGER after_instituicao_insert
-ON Instituicao
-AFTER INSERT
-AS
-BEGIN
-    DECLARE @newIdFinanciador INT;
-
-    -- Insere na tabela Financiador automaticamente
-    INSERT INTO Financiador (IdFinanciador, TipoFinanciador)
-    VALUES (SCOPE_IDENTITY(), 'Instituicao');
-END
-
+--aqui sempre que adiciono uma instituição ou um programa, automáticamente cria um financiador
 CREATE TRIGGER after_programa_insert
 ON Programa
 AFTER INSERT
 AS
 BEGIN
-    DECLARE @newIdFinanciador INT;
+    DECLARE @newId INT;
+    
+    -- Obtém o ID do programa recém-inserido
+    SELECT @newId = IdPrograma FROM inserted;
 
-    -- Insere na tabela Financiador automaticamente
+    -- Insere na tabela Financiador
     INSERT INTO Financiador (IdFinanciador, TipoFinanciador)
-    VALUES (SCOPE_IDENTITY(), 'Programa');
+    VALUES (@newId, 'Programa');
 END
+GO
 
-----------------Trigger instituição e programa --------------
--- Criação da sequência para gerar IDs únicos para financiadores
-CREATE SEQUENCE FinanciadorIdSequence
-    START WITH 1
-    INCREMENT BY 1;
-
--- Gatilho para inserção de novas instituições
-CREATE TRIGGER InsertInstituicaoFinanciador
+CREATE TRIGGER after_instituicao_insert
 ON Instituicao
 AFTER INSERT
 AS
 BEGIN
-    DECLARE @IdInstituicao INT;
-    DECLARE insert_cursor CURSOR FOR
-    SELECT IdInstituicao FROM inserted;
+    DECLARE @newId INT;
+    
+    -- Obtém o ID da instituição recém-inserida
+    SELECT @newId = IdInstituicao FROM inserted;
 
-    OPEN insert_cursor;
-    FETCH NEXT FROM insert_cursor INTO @IdInstituicao;
+    -- Insere na tabela Financiador
+    INSERT INTO Financiador (IdFinanciador, TipoFinanciador)
+    VALUES (@newId, 'Instituicao');
+END
+GO
 
-    WHILE @@FETCH_STATUS = 0
-    BEGIN
-        INSERT INTO Financiador (IdFinanciador, TipoFinanciador)
-        VALUES (@IdInstituicao, 'Instituição');
-
-        FETCH NEXT FROM insert_cursor INTO @IdInstituicao;
-    END;
-
-    CLOSE insert_cursor;
-    DEALLOCATE insert_cursor;
-END;
-
--- Gatilho para inserção de novos programas
-CREATE TRIGGER InsertProgramaFinanciador
-ON Programa
+---delete part!
+CREATE TRIGGER after_instituicao_insert
+ON Instituicao
 AFTER INSERT
 AS
 BEGIN
-    DECLARE @IdPrograma INT;
-    DECLARE insert_cursor CURSOR FOR
-    SELECT IdPrograma FROM inserted;
+    DECLARE @newId INT;
+    
+    -- Obtém o ID da instituição recém-inserida
+    SELECT @newId = IdInstituicao FROM inserted;
 
-    OPEN insert_cursor;
-    FETCH NEXT FROM insert_cursor INTO @IdPrograma;
-
-    WHILE @@FETCH_STATUS = 0
-    BEGIN
-        INSERT INTO Financiador (IdFinanciador, TipoFinanciador)
-        VALUES (@IdPrograma, 'Programa');
-
-        FETCH NEXT FROM insert_cursor INTO @IdPrograma;
-    END;
-
-    CLOSE insert_cursor;
-    DEALLOCATE insert_cursor;
-END;
-
------delete part!
-
--- Gatilho para exclusão de programas na tabela Programa
-CREATE TRIGGER DeleteFinanciadorPrograma
-ON Programa
-AFTER DELETE
-AS
-BEGIN
-    DECLARE @IdPrograma INT;
-    SELECT TOP 1 @IdPrograma = IdPrograma FROM deleted;
-
-    DELETE FROM Financiador WHERE IdFinanciador = @IdPrograma;
-END;
+    -- Insere na tabela Financiador
+    INSERT INTO Financiador (IdFinanciador, TipoFinanciador)
+    VALUES (@newId, 'Instituicao');
+END
 GO
 
 
--- Gatilho para exclusão de instituições na tabela Instituicao
-CREATE TRIGGER DeleteFinanciadorInstituicao
-ON Instituicao
-AFTER DELETE
-AS
-BEGIN
-    DECLARE @IdInstituicao INT;
-    SELECT TOP 1 @IdInstituicao = IdInstituicao FROM deleted;
-
-    DELETE FROM Financiador WHERE IdFinanciador = @IdInstituicao;
-END;
-
-
-----------------------------------------------------------------------------
-
 --------------Projeto e Prestacao Servico-----------------------------------
-
+--mesmo esquema, sempre que insiro um projeto ou prestacao de serviço gera um id e tipo na tabela projeto-servico
 -- Gatilho para inserção de projetos e prestação de serviços na tabela Projeto_Servico
 CREATE TRIGGER InsertProjetoServico
 ON Projeto
@@ -252,8 +193,7 @@ BEGIN
     DEALLOCATE insert_cursor;
 END;
 
---delete
-
+--Delete
 -- Gatilho de exclusão para a tabela Projeto
 CREATE TRIGGER DeleteProjetoServico
 ON Projeto
@@ -261,7 +201,8 @@ AFTER DELETE
 AS
 BEGIN
     DELETE FROM Projeto_Servico
-    WHERE IdProjeto_Servico IN (SELECT IdProjeto FROM deleted);
+    WHERE IdProjeto_Servico IN (SELECT IdProjeto FROM deleted)
+    AND TipoProjeto_Servico = 'Projeto';
 END;
 GO
 
@@ -272,9 +213,132 @@ AFTER DELETE
 AS
 BEGIN
     DELETE FROM Projeto_Servico
-    WHERE IdProjeto_Servico IN (SELECT IdPrestacaoServico FROM deleted);
+    WHERE IdProjeto_Servico IN (SELECT IdPrestacaoServico FROM deleted)
+    AND TipoProjeto_Servico = 'PrestacaoServico';
 END;
 GO
+
+-----------------------Trigger Financiamento-------------
+------agora sempre que um financiamento é inserido, é necessário referenciar o projeto 
+--ou prestacao de serviço ao qual ele será associado e insere automáticamente na tabela 
+--Financiamento_Projeto_PrestacaoServico
+
+USE DIUBI;
+GO
+
+CREATE PROCEDURE InserirFinanciamento
+    @Valor DECIMAL(15, 2),
+    @TipoFinanciamento VARCHAR(250),
+    @OrigemFinanciamento VARCHAR(250),
+    @IdFinanciador INT,
+    @TipoFinanciador VARCHAR(50),
+    @IdProjeto_Servico INT,
+    @TipoProjeto_Servico VARCHAR(50)
+AS
+BEGIN
+    DECLARE @IdFinanciamento INT;
+
+    -- Inserir na tabela Financiamento
+    INSERT INTO Financiamento (Valor, TipoFinanciamento, OrigemFinanciamento, IdFinanciador, TipoFinanciador)
+    VALUES (@Valor, @TipoFinanciamento, @OrigemFinanciamento, @IdFinanciador, @TipoFinanciador);
+
+    -- Obter o último IdFinanciamento inserido
+    SET @IdFinanciamento = SCOPE_IDENTITY();
+
+    -- Inserir na tabela Financiamento_Projeto_PrestacaoServico
+    INSERT INTO Financiamento_Projeto_PrestacaoServico (IdFinanciamento, IdProjeto_Servico, TipoProjeto_Servico)
+    VALUES (@IdFinanciamento, @IdProjeto_Servico, @TipoProjeto_Servico);
+END;
+GO
+
+EXEC InserirFinanciamento 
+    @Valor = 5000.00, 
+    @TipoFinanciamento = 'Competitivo', 
+    @OrigemFinanciamento = 'Externo', 
+    @IdFinanciador = 1, 
+    @TipoFinanciador = 'Instituicao', 
+    @IdProjeto_Servico = 1, 
+    @TipoProjeto_Servico = 'Projeto';
+
+
+USE DIUBI;
+GO
+
+-- Verificar se o trigger já existe e, se sim, removê-lo
+IF OBJECT_ID('TR_DeleteFinanciamento', 'TR') IS NOT NULL
+    DROP TRIGGER TR_DeleteFinanciamento;
+GO
+
+-- Criar o trigger para deletar registros na tabela Financiamento_Projeto_PrestacaoServico
+USE DIUBI;
+GO
+
+-- Verificar se o trigger já existe e, se sim, removê-lo
+IF OBJECT_ID('TR_InsteadOfDeleteFinanciamento', 'TR') IS NOT NULL
+    DROP TRIGGER TR_InsteadOfDeleteFinanciamento;
+GO
+
+-- Criar o trigger INSTEAD OF DELETE para deletar registros na tabela Financiamento_Projeto_PrestacaoServico
+CREATE TRIGGER TR_InsteadOfDeleteFinanciamento
+ON Financiamento
+INSTEAD OF DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Deletar os registros da tabela Financiamento_Projeto_PrestacaoServico
+    DELETE FROM Financiamento_Projeto_PrestacaoServico
+    WHERE IdFinanciamento IN (SELECT IdFinanciamento FROM DELETED);
+
+    -- Deletar os registros da tabela Financiamento
+    DELETE FROM Financiamento
+    WHERE IdFinanciamento IN (SELECT IdFinanciamento FROM DELETED);
+END;
+GO
+
+
+-----------------Evitar que o valor da equipa e do projeto sejam maiores que o valor total------------
+
+CREATE OR ALTER TRIGGER VerificarCustos
+ON CustoElegivelEquipa
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    DECLARE @TotalCustoEquipa DECIMAL(15, 2);
+    DECLARE @TotalCustoProjeto DECIMAL(15, 2);
+    DECLARE @IdFinanciamento INT;
+
+    -- Calcular o total do custo da equipe
+    SELECT @TotalCustoEquipa = SUM(CustoEquipa)
+    FROM CustoElegivelEquipa
+    WHERE IdFinanciamento = (SELECT IdFinanciamento FROM inserted);
+
+    -- Calcular o total do custo do projeto
+    SELECT @TotalCustoProjeto = SUM(CustoProjeto)
+    FROM CustoElegivelProjeto
+    WHERE IdFinanciamento = (SELECT IdFinanciamento FROM inserted);
+
+    -- Obter o valor total do financiamento
+    SELECT @IdFinanciamento = IdFinanciamento
+    FROM inserted;
+
+    DECLARE @ValorFinanciamento DECIMAL(15, 2);
+
+    SELECT @ValorFinanciamento = Valor
+    FROM Financiamento
+    WHERE IdFinanciamento = @IdFinanciamento;
+
+    -- Verificar se a soma dos custos excede o valor do financiamento
+    IF (@TotalCustoEquipa + @TotalCustoProjeto) > @ValorFinanciamento
+    BEGIN
+        RAISEERROR('A soma dos custos excede o valor total do financiamento.', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END;
+END;
+
+---agora preciso de um trigger para garantir que a equipa de um projeto não use o 
+--custo elegivel (idfinanciamento) associado a outro projeto!!
 
 ---------------trigger tornar o interno líder de um projeto líder na tabela de posições---------------------------------
 CREATE TRIGGER TRG_AssignProjectLeader
@@ -329,67 +393,5 @@ BEGIN
             INSERT INTO PosicaoInterno (IdPosicao, IdInterno, IdProjeto)
             VALUES (1, @NewIdInterno, @IdProjeto) -- 1 representa a posição de líder
         END
-    END
-END
-
------------------Evitar que o valor da equipa e do projeto sejam maiores que o valor total------------
-
-CREATE TRIGGER TRG_CheckCustoElegivelEquipa
-ON CustoElegivelEquipa
-AFTER INSERT, UPDATE
-AS
-BEGIN
-    DECLARE @IdFinanciamento INT
-    DECLARE @TotalCusto DECIMAL(15, 2)
-    DECLARE @ValorFinanciamento DECIMAL(15, 2)
-    
-    -- Obter o IdFinanciamento do registro inserido ou atualizado
-    SELECT @IdFinanciamento = inserted.IdFinanciamento
-    FROM inserted
-
-    -- Calcular a soma de CustoEquipa e CustoProjeto para o financiamento específico
-    SELECT @TotalCusto = ISNULL(
-        (SELECT SUM(CustoEquipa) FROM CustoElegivelEquipa WHERE IdFinanciamento = @IdFinanciamento), 0) +
-        ISNULL((SELECT SUM(CustoProjeto) FROM CustoElegivelProjeto WHERE IdFinanciamento = @IdFinanciamento), 0)
-    
-    -- Obter o valor total do financiamento específico
-    SELECT @ValorFinanciamento = Valor FROM Financiamento WHERE IdFinanciamento = @IdFinanciamento
-
-    -- Verificar se a soma dos custos não excede o valor do financiamento
-    IF @TotalCusto > @ValorFinanciamento
-    BEGIN
-        -- Abortar a operação se a soma dos custos exceder o valor do financiamento
-        RAISERROR('A soma dos custos excede o valor do financiamento.', 16, 1)
-        ROLLBACK TRANSACTION
-    END
-END
-
-CREATE TRIGGER TRG_CheckCustoElegivelProjeto
-ON CustoElegivelProjeto
-AFTER INSERT, UPDATE
-AS
-BEGIN
-    DECLARE @IdFinanciamento INT
-    DECLARE @TotalCusto DECIMAL(15, 2)
-    DECLARE @ValorFinanciamento DECIMAL(15, 2)
-    
-    -- Obter o IdFinanciamento do registro inserido ou atualizado
-    SELECT @IdFinanciamento = inserted.IdFinanciamento
-    FROM inserted
-
-    -- Calcular a soma de CustoEquipa e CustoProjeto para o financiamento específico
-    SELECT @TotalCusto = ISNULL(
-        (SELECT SUM(CustoEquipa) FROM CustoElegivelEquipa WHERE IdFinanciamento = @IdFinanciamento), 0) +
-        ISNULL((SELECT SUM(CustoProjeto) FROM CustoElegivelProjeto WHERE IdFinanciamento = @IdFinanciamento), 0)
-    
-    -- Obter o valor total do financiamento específico
-    SELECT @ValorFinanciamento = Valor FROM Financiamento WHERE IdFinanciamento = @IdFinanciamento
-
-    -- Verificar se a soma dos custos não excede o valor do financiamento
-    IF @TotalCusto > @ValorFinanciamento
-    BEGIN
-        -- Abortar a operação se a soma dos custos exceder o valor do financiamento
-        RAISERROR('A soma dos custos excede o valor do financiamento.', 16, 1)
-        ROLLBACK TRANSACTION
     END
 END

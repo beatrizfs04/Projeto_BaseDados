@@ -37,7 +37,7 @@ CREATE TABLE Membro
 );
 
 ---------------------------------------------------------------
----------problema1--------------
+---------problema1--------------RESOLVIDO
 CREATE TABLE Projeto_Servico
 (
   IdProjeto_Servico INT NOT NULL,
@@ -64,6 +64,7 @@ CREATE TABLE Estado
 CREATE TABLE Programa
 (
   IdPrograma INT NOT NULL,
+  NacionalidadePrograma VARCHAR(250) NULL;
   NomePrograma VARCHAR(250) NOT NULL,
   PRIMARY KEY (IdPrograma)
 );
@@ -106,7 +107,7 @@ CREATE TABLE Posicao
 
 CREATE TABLE Financiador
 (
-  IdFinanciador INT NOT NULL,
+  IdFinanciador INT IDENTITY(1,1) NOT NULL,
   TipoFinanciador VARCHAR(50) NOT NULL, 
   PRIMARY KEY (IdFinanciador, TipoFinanciador)
 );
@@ -129,6 +130,20 @@ CREATE TABLE Instituicao_Membro
   FOREIGN KEY (IdInstituicao) REFERENCES Instituicao(IdInstituicao)
 );
 
+---------problema2
+CREATE TABLE Financiamento
+(
+  IdFinanciamento INT NOT NULL,
+  Valor DECIMAL(15, 2) NOT NULL,
+  TipoFinanciamento VARCHAR(250) NOT NULL,
+  OrigemFinanciamento VARCHAR(250) NOT NULL,
+  IdFinanciador INT NOT NULL,
+  TipoFinanciador VARCHAR(50) NOT NULL, 
+  TipoProjeto_Servico VARCHAR(50) NOT NULL, 
+  PRIMARY KEY (IdFinanciamento),
+  FOREIGN KEY (IdFinanciador, TipoFinanciador) REFERENCES Financiador(IdFinanciador, TipoFinanciador)
+);
+
 
 ----------problema3---alterar IdMembro para Id Interno
 
@@ -142,30 +157,14 @@ CREATE TABLE Projeto
   IdEstado INT NOT NULL,
   IdArea INT NOT NULL,
   IdDominio INT NOT NULL,
-  IdMembro INT NOT NULL,
+  IdInterno INT NOT NULL,
   PRIMARY KEY (IdProjeto),
   FOREIGN KEY (IdData) REFERENCES DataInfo(IdData),
   FOREIGN KEY (IdInstituicao) REFERENCES Instituicao(IdInstituicao),
   FOREIGN KEY (IdEstado) REFERENCES Estado(IdEstado),
   FOREIGN KEY (IdArea) REFERENCES AreaCientifica(IdArea),
   FOREIGN KEY (IdDominio) REFERENCES DominioCientifico(IdDominio),
-  FOREIGN KEY (IdMembro) REFERENCES Membro(IdMembro)
-);
-
----------problema2
-CREATE TABLE Financiamento
-(
-  IdFinanciamento INT NOT NULL,
-  Valor DECIMAL(15, 2) NOT NULL,
-  TipoFinanciamento VARCHAR(250) NOT NULL,
-  OrigemFinanciamento VARCHAR(250) NOT NULL,
-  IdFinanciador INT NOT NULL,
-  TipoFinanciador VARCHAR(50) NOT NULL, 
-  IdProjeto_Servico INT NOT NULL,
-  TipoProjeto_Servico VARCHAR(50) NOT NULL, 
-  PRIMARY KEY (IdFinanciamento),
-  FOREIGN KEY (IdProjeto_Servico, TipoProjeto_Servico) REFERENCES Projeto_Servico(IdProjeto_Servico, TipoProjeto_Servico),
-  FOREIGN KEY (IdFinanciador, TipoFinanciador) REFERENCES Financiador(IdFinanciador, TipoFinanciador)
+  FOREIGN KEY (IdInterno) REFERENCES Interno(IdInterno)
 );
 
 
@@ -173,11 +172,17 @@ CREATE TABLE Financiamento
 CREATE TABLE Equipa
 (
   IdEquipa INT NOT NULL,
-  IdMembro INT NOT NULL,
   IdProjeto INT NOT NULL,
   PRIMARY KEY (IdEquipa),
-  FOREIGN KEY (IdMembro) REFERENCES Membro(IdMembro),
   FOREIGN KEY (IdProjeto) REFERENCES Projeto(IdProjeto)
+);
+
+CREATE TABLE Equipa_Membro
+(
+  IdEquipa INT NOT NULL,
+  IdMembro INT NOT NULL,
+  PRIMARY KEY (IdEquipa, IdMembro),
+  FOREIGN KEY (IdMembro) REFERENCES Membro(IdMembro)
 );
 
 --------------problema5
@@ -203,6 +208,32 @@ CREATE TABLE CustoElegivelProjeto
   FOREIGN KEY (IdProjeto) REFERENCES Projeto(IdProjeto)
 );
 
+
+CREATE TABLE PrestacaoServico
+(
+  IdPrestacaoServico INT NOT NULL,
+  NomePrestacaoServico VARCHAR(250) NOT NULL,
+  Descricao TEXT NOT NULL,
+  IdInterno INT NOT NULL,
+  IdData INT NOT NULL,
+  IdEstado INT NOT NULL,
+  PRIMARY KEY (IdPrestacaoServico),
+  FOREIGN KEY (IdInterno) REFERENCES Interno(IdInterno),
+  FOREIGN KEY (IdData) REFERENCES DataInfo(IdData),
+  FOREIGN KEY (IdEstado) REFERENCES Estado(IdEstado)
+);
+
+CREATE TABLE Financiamento_Projeto_PrestacaoServico
+(
+  IdFinanciamento INT IDENTITY(1,1) NOT NULL;
+  IdProjeto_Servico INT NOT NULL,
+  TipoProjeto_Servico VARCHAR(50) NOT NULL,
+  PRIMARY KEY (IdFinanciamento, IdProjeto_Servico),
+  FOREIGN KEY (IdFinanciamento) REFERENCES Financiamento(IdFinanciamento),
+  FOREIGN KEY (IdProjeto_Servico, TipoProjeto_Servico) REFERENCES Projeto_Servico(IdProjeto_Servico, TipoProjeto_Servico)
+);
+
+
 CREATE TABLE AssociarPalavraChave
 (
   IdAssociacao INT NOT NULL,
@@ -213,21 +244,6 @@ CREATE TABLE AssociarPalavraChave
   FOREIGN KEY (IdPalavraChave) REFERENCES PalavraChave(IdPalavraChave)
 );
 
-CREATE TABLE PrestacaoServico
-(
-  IdPrestacaoServico INT NOT NULL,
-  NomePrestacaoServico VARCHAR(250) NOT NULL,
-  Descricao TEXT NOT NULL,
-  IdInterno INT NOT NULL,
-  IdData INT NOT NULL,
-  IdEstado INT NOT NULL,
-  IdFinanciamento INT NOT NULL,
-  PRIMARY KEY (IdPrestacaoServico),
-  FOREIGN KEY (IdInterno) REFERENCES Interno(IdInterno),
-  FOREIGN KEY (IdData) REFERENCES DataInfo(IdData),
-  FOREIGN KEY (IdEstado) REFERENCES Estado(IdEstado),
-  FOREIGN KEY (IdFinanciamento) REFERENCES Financiamento(IdFinanciamento)
-);
 ------------------atividade
 CREATE TABLE Atividade
 (
