@@ -10,12 +10,11 @@ h1{
     text-align: center;
 }
 
-.forms {
-    color: black;
-    background-color: white;
-    border-radius: 20px; 
-    padding: 20px;
+main {
+    padding: 2em;
 }
+
+/* Barra de Navegação*/
 
 nav {
     color: black;
@@ -57,24 +56,27 @@ nav ul li a:hover {
     color: white;
 }
 
-main {
-    padding: 2em;
-}
+/* Formulário */
 
 form {
     display: flex;
     flex-direction: column;
+    background-color: rgb(196, 196, 196);
+    color: black;
+    padding: 30px;
+    border-radius: 20px;
+    font-size: 30px;
+    font-style: bold;
 }
 
-form label {
-    margin-top: 0.5em;
-}
-
-form input, form textarea {
-    margin-top: 0.2em;
-    padding: 10px;
+form input, form textarea, form select {
+    margin-top: 10px;
+    background-color: rgb(243, 243, 243);
+    padding: 20px;
     font-size: 1em;
     border-radius: 20px;
+    resize: vertical;
+    border: black;
 }
 
 form button {
@@ -88,9 +90,11 @@ form button {
 }
 
 form button:hover {
-    background-color: rgb(231, 91, 40);
+    background-color: rgb(255, 156, 121);
     border-radius: 20px;
 }
+
+/* Escolha Divs */
 
 .escolha{
     margin: auto;
@@ -109,13 +113,20 @@ form button:hover {
     cursor: pointer;
 }
 
-.escolhaProjeto {
-    display: none;
+.escolha button:hover {
+    background-color: rgb(255, 68, 0);
+    border-radius: 20px;
 }
 
 .escolhaProjeto {
+    display: block;
+}
+
+.escolhaServiço {
     display: none;
 }
+
+/* Titulos, Conteúdo e Listas */
 
 .title {
     font-size: 25px;
