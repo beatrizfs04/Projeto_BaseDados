@@ -353,7 +353,7 @@ END
 
 -- Gatilho para garantir que uma equipe esteja associada apenas a um projeto
 CREATE TRIGGER TRG_CheckTeamProjectAssociation
-ON Equipe
+ON Equipa
 INSTEAD OF INSERT
 AS
 BEGIN
@@ -372,26 +372,6 @@ BEGIN
     SELECT IdEquipa, IdProjeto FROM inserted
 END
 
--- Gatilho para garantir que um projeto esteja associado a um financiamento
-CREATE TRIGGER TRG_CheckProjectFinancingAssociation
-ON Projeto
-INSTEAD OF INSERT
-AS
-BEGIN
-    DECLARE @IdProjeto INT, @IdFinanciamento INT
-
-    -- Verificar se o projeto já tem um financiamento associado
-    IF EXISTS (SELECT 1 FROM inserted WHERE IdFinanciamento IN (SELECT IdFinanciamento FROM Financiamento))
-    BEGIN
-        RAISERROR('O projeto já possui um financiamento associado.', 16, 1)
-        ROLLBACK TRANSACTION
-        RETURN
-    END
-
-    -- Inserir os projetos
-    INSERT INTO Projeto (IdProjeto, IdFinanciamento)
-    SELECT IdProjeto, IdFinanciamento FROM inserted
-END
 
 -- Gatilho para garantir que uma equipe esteja associada a um financiamento
 CREATE TRIGGER TRG_AssociateTeamWithFinancing
@@ -448,32 +428,3 @@ END;
 
 
 
-
---------------- n sei se é valida:
-CREATE TRIGGER VerificarAssociacaoAtividade
-ON TempoAtividade
-INSTEAD OF INSERT
-AS
-BEGIN
-    -- Verificar se o membro está associado a uma atividade de um projeto
-    IF EXISTS (
-        SELECT 1
-        FROM inserted i
-        INNER JOIN Atividade a ON i.IdAtividade = a.IdAtividade
-        INNER JOIN Projeto_Servico ps ON a.IdProjeto_Servico = ps.IdProjeto_Servico AND a.TipoProjeto_Servico = ps.TipoProjeto_Servico
-        INNER JOIN Equipa_Membro em ON i.IdMembro = em.IdMembro
-        INNER JOIN Equipa e ON em.IdEquipa = e.IdEquipa AND e.IdProjeto = ps.IdProjeto_Servico -- Verifica se o membro está na equipe do projeto associado à atividade
-    )
-    BEGIN
-        -- Se o membro está associado a uma atividade de um projeto, permitir a inserção na tabela TempoAtividade
-        INSERT INTO TempoAtividade (IdMembro, TempoTrabalho, IdAtividade)
-        SELECT IdMembro, TempoTrabalho, IdAtividade FROM inserted;
-    END
-    ELSE
-    BEGIN
-        -- Se o membro não está associado a uma atividade de um projeto, lançar um erro e desfazer a transação
-        RAISERROR('Um membro nao pode realizar uma atividade para um projeto se nao estiver na equipa deste projeto', 16, 1);
-        ROLLBACK TRANSACTION;
-        RETURN;
-    END;
-END;
