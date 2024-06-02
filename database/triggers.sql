@@ -235,7 +235,6 @@ BEGIN
 END;
 GO
 
-
 -- Criar o trigger INSTEAD OF DELETE para deletar registros na tabela Financiamento_Projeto_PrestacaoServico
 CREATE TRIGGER TR_InsteadOfDeleteFinanciamento
 ON Financiamento
@@ -289,14 +288,14 @@ BEGIN
     -- Verificar se a soma dos custos excede o valor do financiamento
     IF (@TotalCustoEquipa + @TotalCustoProjeto) > @ValorFinanciamento
     BEGIN
-        RAISEERROR('A soma dos custos excede o valor total do financiamento.', 16, 1);
+        RAISERROR('A soma dos custos excede o valor total do financiamento.', 16, 1);
         ROLLBACK TRANSACTION;
         RETURN;
     END;
 END;
 
 ---trigger para garantir que a equipa de um projeto não use o 
---custo elegivel (idfinanciamento) associado a outro porjeto!!
+--custo elegivel (idfinanciamento) associado a outro projeto!!
 
 CREATE TRIGGER AssociarFinanciamentoEquipa
 ON CustoElegivelEquipa
