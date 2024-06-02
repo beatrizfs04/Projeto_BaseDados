@@ -30,8 +30,12 @@
             <div class="escolhaProjeto">
                 <h3>Preencha os seguintes dados para criar um Projeto.</h3>
                 <form>
-                    Identificador do Projeto: <!--(IdPrestacaoServico)--> 
-                    <input type="text"><br>
+                    <h2>Projeto</h2>
+                    <!-- 
+                        DUVIDA: 
+                        Eu tirei o campo: Identificador do Projeto: (IdPrestacaoServico).
+                        É preciso pedir o IdProjeto? O Id não é gerado automáticamente?
+                    -->
                     
                     Nome do Projeto: <!--(NomeServiço)--> 
                     <input type="text"><br>
@@ -41,6 +45,11 @@
                     
                     Estado atual: <!--(IdEstado)--> 
                     <select name="Estado" id="estado">
+                        <!-- 
+                            DUVIDA:
+                            Tem que se guardar isto na BD Estado? 
+                            Ou é para ir buscar estes valores à BD Estado? 
+                        -->
                         <option value="aprovado">aprovado</option>
                         <option value="cancelado">cancelado</option>
                         <option value="concluído">concluído</option>
@@ -60,21 +69,15 @@
                     <input type="date"><br> 
 
                     Área Científica: <!--(IdArea)--> 
-                    <!-- Qual era mesmo a diferença entre o dominio cientifico e a area? -->
                     <select name="AreaCientifica" id="area">
-                        <option value="Matemática">Matemática</option>
-                        <option value="Informática">Informática</option>
-                        <option value="Biologia">Biologia</option>
-                        <option value="Artes">Artes</option>
+                        <option value=""></option> 
+                        <!-- Buscar valores à base de dados -->
                     </select><br>
 
                     Domínio Científico: <!--(IdDominio)--> 
-                    <!-- Qual era mesmo a diferença entre o dominio cientifico e a area? -->
-                    <select name="AreaCientifica" id="area">
-                        <option value="Matemática">Matemática</option>
-                        <option value="Informática">Informática</option>
-                        <option value="Biologia">Biologia</option>
-                        <option value="Artes">Artes</option>
+                    <select name="DominioCientifica" id="dominio">
+                        <option value=""></option> 
+                        <!-- Buscar valores à base de dados -->
                     </select><br>
 
                     Investigador do Responsável: <!--(IdMembro)--> 
@@ -93,20 +96,22 @@
                     <h2>Equipas</h2>
 
                     Quantos membros terá o Projeto:
-                    <input type="number" id="numMembros" maxlength="2" oninput="adicionarCampos()" onkeypress="if(this.value.length>=2) return false;"><br>
+                    <input type="text" id="numMembros" oninput="adicionarCampos()" onkeypress="if(this.value.length>=1) return false;"><br>
                     
                     Identifique abaixo os Membros:
-                    <div id="membrosContainer">
+                    <div id="membrosContainer"><br>
+                        <small> « Tem que prencher o campo acima primeiro » </small>
                         <!-- Campos de seleção serão adicionados aqui pelo script: adicionarCampos() -->
                     </div>
                     
                     <br>
                     <h2>Financiamento</h2>
 
-                    Identificador do Financiamento: <!--(IdFinanciamento)-->
-                    <select name="IdentificadorF" id="IdentificadorF">
-                        <option value=""></option> <!-- Que tenho de colocar aqui? -->
-                    </select><br>
+                    <!-- 
+                        DUVIDA: 
+                        Eu tirei o campo: Identificador do Financiamento: (IdFinanciamento).
+                        É preciso pedir o IdFinanciamento? O Id não é gerado automáticamente?
+                    -->
 
                     Financiador: <!--(IdFinanciador)-->
                     <select name="Financiador" id="financiador">
@@ -126,12 +131,14 @@
                         <option value="interno">Interno</option>
                     </select><br>
 
-                    Valor:<!--(Valor)-->
+                    Valor Total:<!--(Valor)-->
                     <input type="number"><br>
 
-                    Identificação Custo Elegível(IdCustoElegivel): <br>
-                    Valor Atribuído a Equipa(CustoEquipa): <br>
-                    Valor Atribuído ao Projeto(CustoProjeto): <br>
+                    Valor Atribuído a Equipa: <!--(CustoEquipa)-->
+                    <input type="number"><br>
+
+                    Valor Atribuído ao Projeto: <!--(CustoProjeto)-->
+                    <input type="number"><br>
                 </form>
             </div>
 
@@ -140,8 +147,12 @@
                 <h3>Preencha os seguintes dados para criar uma Prestação de Serviço.</h3>
 
                 <form>
-                    Identificador da Prestação de Serviço: <!--(IdPrestacaoServico)--> 
-                    <input type="text"><br>
+                    <h2>Pretação de Serviço</h2>
+                    <!-- 
+                        DUVIDA: 
+                        Eu tirei o campo: Identificador da Prestação de Serviço: (IdPrestacaoServico).
+                        É preciso pedir o IdPrestacaoServico? O Id não é gerado automáticamente?
+                    -->
                     
                     Nome da Prestação de Serviço: <!--(NomeServiço)--> 
                     <input type="text"><br>
@@ -150,7 +161,12 @@
                     <textarea></textarea><br>
                     
                     Estado atual: <!--(IdEstado)--> 
-                    <select name="Estado" id="estado">
+                    <select name="Estado" id="estado"> 
+                        <!-- 
+                            DUVIDA:
+                            Tem que se guardar isto na BD Estado? 
+                            Ou é para ir buscar estes valores à BD Estado? 
+                        -->
                         <option value="aprovado">aprovado</option>
                         <option value="cancelado">cancelado</option>
                         <option value="concluído">concluído</option>
@@ -161,30 +177,26 @@
                     </select><br> 
 
                     Identificador do Interno Responsável: <!--(IdInterno)--> 
-                    <input type="text"><br>
+                    <select name="Responsável" id="responsável">
+                        <option value=""></option>
+                        <!-- Buscar valores à base de dados -->
+                    </select>
                     
                     DataInicio: <!--(IdData)--> 
                     <input type="date"><br>
 
-                    DataFim: <!--(IdData)--> 
-                    <input type="date"><br> 
-
                     Área Científica: <!--(IdArea)--> 
                     <!-- Qual era mesmo a diferença entre o dominio cientifico e a area? -->
                     <select name="AreaCientifica" id="area">
-                        <option value="Matemática">Matemática</option>
-                        <option value="Informática">Informática</option>
-                        <option value="Biologia">Biologia</option>
-                        <option value="Artes">Artes</option>
+                        <option value=""></option>
+                        <!-- Buscar valores à base de dados -->
                     </select><br>
 
                     Domínio Científico: <!--(IdDominio)--> 
                     <!-- Qual era mesmo a diferença entre o dominio cientifico e a area? -->
-                    <select name="AreaCientifica" id="area">
-                        <option value="Matemática">Matemática</option>
-                        <option value="Informática">Informática</option>
-                        <option value="Biologia">Biologia</option>
-                        <option value="Artes">Artes</option>
+                    <select name="DominioCientifico" id="dominio">
+                        <option value=""></option>
+                        <!-- Buscar valores à base de dados -->
                     </select><br>
 
                     Investigador Responsável: <!--(IdMembro)--> 
@@ -202,10 +214,11 @@
                     <br>
                     <h2>Financiamento</h2>
 
-                    Identificador do Financiamento: <!--(IdFinanciamento)-->
-                    <select name="IdentificadorF" id="IdentificadorF">
-                        <option value=""></option> <!-- Que tenho de colocar aqui? -->
-                    </select><br>
+                    <!-- 
+                        DUVIDA: 
+                        Eu tirei o campo: Identificador do Financiamento: (IdFinanciamento).
+                        É preciso pedir o IdFinanciamento? O Id não é gerado automáticamente?
+                    -->
 
                     Financiador: <!--(IdFinanciador)-->
                     <select name="Financiador" id="financiador">
@@ -228,61 +241,46 @@
                     Valor:<!--(Valor)-->
                     <input type="number">
                 </form>
-
-                <!--| Nova Seção |
-                    Se tivermos tempo, fazer novas seções para registro de:
-                        - Membros
-                        - Instituições
-                        - Publicações
-                        - Palavras Chaves
-                        - Registo de Atividades
-                        - Domínio Científico
-                        - Área Científica
-                -->
             </div>
         </main>
-        <script src="mudar_divs"></script>
+
         <script>
+
+            // Procurar Membros assuciados a projeto <- Está mal tem que se procurar membros na tabela Membros só.
             async function fetchProjects() {
-              try {
-                const response = await fetch('/api/getInvestigadores');
-                if (!response.ok) {
-                  throw new Error('Network response was not ok');
+                try {
+                  const response = await fetch('/api/getInvestigadores');
+                  if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                  }
+                  const projects = await response.json();
+                  const dropdown = document.getElementById('investigador');
+                  projects.forEach(project => {
+                    const option = document.createElement('option');
+                    option.value = project.IdPessoa;
+                    option.text = `${project.IdPessoa} - ${project.PrimeiroNome} ${project.UltimoNome}`;
+                    dropdown.add(option);
+                  });
+                } catch (error) {
+                  console.error('Failed to fetch projects:', error);
                 }
-                const projects = await response.json();
-                const dropdown = document.getElementById('investigador');
-                projects.forEach(project => {
-                  const option = document.createElement('option');
-                  option.value = project.IdPessoa;
-                  option.text = `${project.IdPessoa} - ${project.PrimeiroNome} ${project.UltimoNome}`;
-                  dropdown.add(option);
-                });
-              } catch (error) {
-                console.error('Failed to fetch projects:', error);
-              }
             }
-        
-            // Fetch projects when the page loads
+            
             window.onload = fetchProjects;
 
+            // adicionar campos
             function adicionarCampos() {
-                // Obter o número de membros do input
                 const numeroDeMembros = document.getElementById('numMembros').value;
-                
-                // Local onde os campos de seleção serão adicionados
                 const container = document.getElementById('membrosContainer');
-                
-                // Limpar campos existentes
                 container.innerHTML = '';
                 
-                // Adicionar o número de campos selecionado pelo usuário
                 for (let i = 0; i < numeroDeMembros; i++) {
-                    // Criar o elemento select
                     const select = document.createElement('select');
                     select.name = 'Membro';
                     select.id = `membro${i}`;
-                    
-                    // Adicionar opções ao select (valores de exemplo, substituir por valores da base de dados)
+
+                    // Precisamos que procura membros na tabela Membros. 
+                    // É preciso tbm que guarde os membros na tabela Equipa.
                     const option1 = document.createElement('option');
                     option1.value = '';
                     option1.textContent = '';
@@ -299,14 +297,12 @@
                     select.appendChild(option2);
                     select.appendChild(option3);
                     
-                    // Adicionar o select ao container
                     container.appendChild(select);
-                    
-                    // Adicionar uma quebra de linha
                     container.appendChild(document.createElement('br'));
                 }
             }
         </script>
+        <script src="mudar_divs"></script>
     </body>
     <script src="index.js"></script>
 </html>

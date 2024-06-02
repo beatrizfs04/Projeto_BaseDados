@@ -79,6 +79,10 @@ form input, form textarea, form select {
     border: black;
 }
 
+form select {
+    width: 100%;
+}
+
 form button {
     margin-top: 1em;
     padding: 20px;
