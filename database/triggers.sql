@@ -125,21 +125,6 @@ END
 GO
 
 ---delete part!
-CREATE TRIGGER after_instituicao_insert
-ON Instituicao
-AFTER INSERT
-AS
-BEGIN
-    DECLARE @newId INT;
-    
-    -- Obtém o ID da instituição recém-inserida
-    SELECT @newId = IdInstituicao FROM inserted;
-
-    -- Insere na tabela Financiador
-    INSERT INTO Financiador (IdFinanciador, TipoFinanciador)
-    VALUES (@newId, 'Instituicao');
-END
-GO
 
 
 --------------Projeto e Prestacao Servico-----------------------------------
@@ -222,7 +207,6 @@ GO
 ------agora sempre que um financiamento é inserido, é necessário referenciar o projeto 
 --ou prestacao de serviço ao qual ele será associado e insere automáticamente na tabela 
 --Financiamento_Projeto_PrestacaoServico
-
 USE DIUBI;
 GO
 
@@ -251,32 +235,6 @@ BEGIN
 END;
 GO
 
-EXEC InserirFinanciamento 
-    @Valor = 5000.00, 
-    @TipoFinanciamento = 'Competitivo', 
-    @OrigemFinanciamento = 'Externo', 
-    @IdFinanciador = 1, 
-    @TipoFinanciador = 'Instituicao', 
-    @IdProjeto_Servico = 1, 
-    @TipoProjeto_Servico = 'Projeto';
-
-
-USE DIUBI;
-GO
-
--- Verificar se o trigger já existe e, se sim, removê-lo
-IF OBJECT_ID('TR_DeleteFinanciamento', 'TR') IS NOT NULL
-    DROP TRIGGER TR_DeleteFinanciamento;
-GO
-
--- Criar o trigger para deletar registros na tabela Financiamento_Projeto_PrestacaoServico
-USE DIUBI;
-GO
-
--- Verificar se o trigger já existe e, se sim, removê-lo
-IF OBJECT_ID('TR_InsteadOfDeleteFinanciamento', 'TR') IS NOT NULL
-    DROP TRIGGER TR_InsteadOfDeleteFinanciamento;
-GO
 
 -- Criar o trigger INSTEAD OF DELETE para deletar registros na tabela Financiamento_Projeto_PrestacaoServico
 CREATE TRIGGER TR_InsteadOfDeleteFinanciamento
