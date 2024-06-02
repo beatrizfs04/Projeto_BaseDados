@@ -15,21 +15,21 @@ queries.get("/estado_projeto/:IdProjeto", async (req, res) => {
 });
 
 queries.get("/financiamento_projetos", async (req, res) => {
-    const query = "SELECT DISTINCT P.IdProjeto, P.NomeProjeto, F.Valor FROM Projeto P, Financiamento F WHERE F.TipoProjeto_Servico = P.IdProjeto AND F.TipoProjeto_Servico LIKE 'projeto' ORDER BY VALOR DESC";
+    const query = "SELECT DISTINCT P.IdProjeto, P.NomeProjeto, F.Valor FROM Projeto P, Financiamento F WHERE F.IdFinanciador = P.IdProjeto AND F.TipoFinanciador LIKE 'projeto' ORDER BY VALOR DESC";
     const sqlRequest = new sql.Request();
     const result = await sqlRequest.query(query);
     res.status(200).send(result.recordset);
 });
 
 queries.get("/membros_projetos", async (req, res) => {
-    const query = "SELECT DISTINCT P.IdProjeto, P.NomeProjeto, COUNT(E.IdMembro) as QuantidadeMembros FROM Projeto P JOIN Equipa E ON E.IdProjeto = P.IdProjeto JOIN Membro M ON E.IdMembro = M.IdMembro GROUP BY P.IdProjeto, P.NomeProjeto ORDER BY QuantidadeMembros DESC";
+    const query = "SELECT DISTINCT P.IdProjeto, P.NomeProjeto, COUNT(EM.IdMembro) as QuantidadeMembros FROM Projeto P JOIN Equipa E ON E.IdProjeto = P.IdProjeto JOIN Equipa_Membro EM ON EM.IdEquipa = E.IdEquipa JOIN Membro M ON M.IdMembro = EM.IdMembro GROUP BY P.IdProjeto, P.NomeProjeto ORDER BY QuantidadeMembros DESC";
     const sqlRequest = new sql.Request();
     const result = await sqlRequest.query(query);
     res.status(200).send(result.recordset);
 });
 
 queries.get("/instituicao_projetos_financiamentos", async (req, res) => {
-    const query = "SELECT DISTINCT I.NomeInstituicao, COUNT(F.IdFinanciamento) as QuantidadeFinanciamentos FROM Instituicao I JOIN Financiamento F ON I.IdFinanciador = I.IdInstituicao JOIN Financiador Fin ON F.IdFinanciadoor = Fin.IdFinanciador AND Fin.TipoFinanciador LIKE 'Projeto' GROUP BY I.NomeInstituicao ORDER BY QuantidadeFinanciamentos DESC";
+    const query = "SELECT DISTINCT I.NomeInstituicao, COUNT(F.IdFinanciamento) as QuantidadeFinanciamentos FROM Instituicao I JOIN Financiamento F ON F.IdFinanciador = I.IdInstituicao JOIN Financiador Fin ON Fin.IdFinanciador = F.IdFinanciador AND Fin.TipoFinanciador LIKE 'Projeto' GROUP BY I.NomeInstituicao ORDER BY QuantidadeFinanciamentos DESC";
     const sqlRequest = new sql.Request();
     const result = await sqlRequest.query(query);
     res.status(200).send(result.recordset);
